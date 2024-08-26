@@ -1,0 +1,17 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() 
+{
+  string firstName;
+  string answer1;
+
+  cout << "Welcome to CMPSC 101! Please enter your name: ";
+  cin >> firstName;
+  cout << "Hello " << firstName << ". How are you? " << endl;
+  cin >> answer1;
+  cout << "You are " + answer1 + ", That's great!" << endl;
+
+  return 0;
+}// end of main
