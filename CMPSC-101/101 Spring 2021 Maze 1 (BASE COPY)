@@ -1,0 +1,231 @@
+// NAME HERE
+// Works Cited / Upgrades
+// none
+
+#include <iostream>
+using namespace std;
+
+////// global constants
+// title of game
+const string TITLE = "CMPSC101 Maze";
+// must complete maze in this many moves
+const int MOVES_ALLOWED = 15;  
+// height of maze  
+const int ROWS = 7;
+// width of maze      
+const int COLUMNS = 7;
+// fill character for empty positions  
+const string F = " ";   
+// player symbol
+const string P = "M"; // "\U0001F603" What is this?
+// vertical wall symbol  
+const string V = "|";   
+// horizontal wall symbol
+const string H = "-";   
+// symbol for the end of the maze
+const string E = "C"; 
+// color code for text in the title
+const int TITLE_COLOR = 36;
+
+////// global variables
+
+// game board
+string gameboard[ROWS][COLUMNS] =
+//    columns
+// 0 1 2 3 4 5 6
+{                 //rows
+  {H,H,H,H,H,H,H}, // 0
+  {V,P,V,F,F,F,V}, // 1
+  {V,F,V,F,V,F,V}, // 2
+  {V,F,F,F,V,F,V}, // 3
+  {V,F,H,H,V,F,V}, // 4
+  {V,F,F,F,V,E,V}, // 5
+  {H,H,H,H,H,H,H}  // 6
+};
+
+////// function declarations
+// display game board
+void displayGameboard();
+// display status panel
+void displayStatusPanel(int playerCol, int playerRow, int movesRemaining, string userMessage);
+// display the title
+void displayTitle();
+
+////// main program
+
+int main()
+{
+  //// local variables
+
+  // player variables
+
+  // user input for direction of movement
+  string playerMove = ""; 
+  // player row #    
+  int playerRow = 1;
+  // player column #          
+  int playerCol = 1;          
+  
+  // game variables
+
+  // flag variable to control game loop
+  bool isGameOver = false; 
+  // # of moves by which player must complete maze   
+  int movesRemaining = MOVES_ALLOWED;  
+  // error message to display to user 
+  string userMessage = "";    
+
+  // initial setup
+  system("clear");
+  displayGameboard();
+
+  // main game loop
+
+  while (!isGameOver)
+  {
+    system("clear");
+    displayGameboard();
+    displayTitle();
+    displayStatusPanel(playerCol, playerRow, movesRemaining, userMessage);
+    
+    cout << endl;
+    cout << "Press a letter to move:\nw up\ta left\ts down\td right: ";
+    cin >> playerMove;
+
+    // keep track of original, last position of player
+    int previousPlayerRow = playerRow;
+    int previousPlayerCol = playerCol;
+
+    if (playerMove == "d")
+    {
+      if (playerCol < COLUMNS - 1)
+      {
+        playerCol++;
+      }
+      else
+      {
+        isGameOver = true;
+        userMessage = "You lost. You must stay on the game board.";
+        break;
+      }
+    }
+    else if (playerMove == "s")
+    {
+      if (playerRow < ROWS - 1)
+      {
+        playerRow++;
+      }
+      else
+      {
+        isGameOver = true;
+        userMessage = "You must stay on the game board.";
+        break;
+      }
+    }
+    else if (playerMove == "a")
+    {
+      if (playerCol > 0)
+      {
+        playerCol--;
+      }
+      else
+      {
+        isGameOver = true;
+        userMessage = "You must stay on the game board.";
+        break;
+      }
+    }
+    else if (playerMove == "w")
+    {
+      if (playerRow > 0)
+      {
+        playerRow--;
+      }
+      else
+      {
+        isGameOver = true;
+        userMessage = "You must stay on the game board.";
+        break;
+      }
+    }
+
+    // collision detection
+    if (gameboard[playerRow][playerCol] == H || gameboard[playerRow][playerCol] == V)
+    {
+      isGameOver = true;
+      userMessage = "You hit a wall. Game Over.";
+      break;
+    }
+    // valid move
+    else if (gameboard[playerRow][playerCol] == F)
+    {
+      movesRemaining--;
+      gameboard[playerRow][playerCol] = P;
+      gameboard[previousPlayerRow][previousPlayerCol] = F;
+    }
+    else if (gameboard[playerRow][playerCol] == E)
+    {
+      isGameOver = true;
+      userMessage = "You won by reaching the end. Game Over.";
+      break;
+    }
+
+    system("clear");
+    displayGameboard();
+
+    if (movesRemaining <= 0)
+    {
+      userMessage = "You ran out of moves. Game Over.";
+      break;
+    }
+
+  }// end of game loop
+
+  system("clear");
+  displayGameboard();
+  displayStatusPanel(playerCol, playerRow, movesRemaining, userMessage);
+	
+	return 0;
+}// end of main function
+
+////// functions
+
+// display the game board
+void displayGameboard()
+{
+  // display the current gameboard
+  for (int row = 0; row < ROWS; row++)
+  {
+    for (int col = 0; col < COLUMNS; col++)
+    {
+      // put blank space between gameboard locations 
+      // to space out the game board
+      cout << gameboard[row][col] << " ";  
+    }
+      
+    cout << endl;   // next row
+  }
+
+}// end of displayGameboard function
+
+// display the status panel
+void displayStatusPanel(int playerCol, int playerRow, int movesRemaining, string userMessage)
+{
+  cout << "Remaining Moves: " << movesRemaining << "\tCurrent Location: " << playerCol << " " << playerRow << endl;
+
+  if (userMessage != "")
+  {
+    cout << userMessage << endl;
+  }
+}// end of displayStatusPanel function
+
+// display the title
+void displayTitle()
+{
+  // set the text color to the one specified for the title
+  cout << "\033[" << TITLE_COLOR << "m";
+  // display the title's actual text
+  cout << TITLE;
+  // reset the text color to the default (0)
+  cout << "\033[0m" << endl;
+}// end of displayTitle function
