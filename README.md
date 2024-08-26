@@ -5,4 +5,5 @@ Code is separated by class to the best of my ability, where "Misc" includes rand
 
 Code I like the most:
 - CMPSC 101 Final Project (Personal)
-- 
+- Matrix Multiplication
+- VZ_Loan_Database
