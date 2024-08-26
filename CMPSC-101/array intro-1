@@ -1,0 +1,36 @@
+// array intro
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int scores[5];
+
+	int sum = 0;
+	double average = 0.0;
+
+	cout << "Enter next grade: ";
+	cin >> scores[0];
+
+	cout << "Enter next grade: ";
+	cin >> scores[1];
+
+	cout << "Enter next grade: ";
+	cin >> scores[2];
+
+	cout << "Enter next grade: ";
+	cin >> scores[3];
+
+	cout << "Enter next grade: ";
+	cin >> scores[4];
+
+
+	sum = scores[0] + scores[1] + scores[2] + scores[3] + scores[4];
+
+	average = sum / 5.0;
+
+	cout << average << endl;
+
+	return 0;
+}// end of main
