@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int sizeM = 0;
+  int sizeN = 0;
+  int sizeP = 0;
+  cout << "Input the m for the m x n matrix B (whole number >= 2): ";
+  cin >> sizeM; // Requests the m for the m x n matrix
+  cout << "Input the n the two matrices (whole number >= 2): ";
+  cin >> sizeN; // Requests the n used in both matrix sizes
+  cout << "Input the p for the n x p matrix C (whole number >= 2): ";
+  cin >> sizeP;                 // Requests the p for the n x p matrix
+  //double matrixB[sizeM][sizeN]; // Creates the m x n matrix
+  //double matrixC[sizeN][sizeP]; // Creates the n x p matrix
+  //double matrixA[sizeM][sizeP]; // Creates the m x p matrix
+  double** matrixB = new double*[sizeM]; 
+        for (int i = 0; i < sizeM; i++) { matrixB[i] = new double[sizeN]; }
+  double** matrixC = new double*[sizeN]; 
+        for (int i = 0; i < sizeN; i++) { matrixC[i] = new double[sizeP]; }
+  double** matrixA = new double*[sizeM]; 
+        for (int i = 0; i < sizeM; i++) { matrixA[i] = new double[sizeP]; }
+
+  cout << "\nInput the coefficients of the m x n matrix B: \n";
+  for (int i = 0; i < sizeM; i++) {
+    for (int j = 0; j < sizeN; j++) {
+      cout << "b" << i + 1 << j + 1 << ": ";
+      cin >> matrixB[i][j];
+    }
+  }
+
+  cout << "\nInput the coefficients of the n x p matrix C: \n";
+  for (int i = 0; i < sizeN; i++) {
+    for (int j = 0; j < sizeP; j++) {
+      cout << "c" << i + 1 << j + 1 << ": ";
+      cin >> matrixC[i][j];
+    }
+  }
+
+  double Aij = 0;
+  for (int i = 0; i < sizeM; i++) {
+    for (int j = 0; j < sizeP; j++) {
+      Aij = 0;
+      for (int k = 0; k < sizeN; k++) {
+        Aij += (matrixB[i][k] * matrixC[k][j]);
+      }
+      matrixA[i][j] = Aij;
+    }
+  }
+
+  cout << "\nMatrix B: \n";
+  // Outputs m x n Matrix B
+  for (int i = 0; i < sizeM; i++) {
+    for (int j = 0; j < sizeN; j++) {
+      cout << matrixB[i][j] << " ";
+    }
+    cout << "\n";
+  }
+
+  cout << "\nMatrix C: \n";
+  // Outputs n x p Matrix C
+  for (int i = 0; i < sizeN; i++) {
+    for (int j = 0; j < sizeP; j++) {
+      cout << matrixC[i][j] << " ";
+    }
+    cout << "\n";
+  }
+
+  cout << "\nMatrix A: \n";
+  // Outputs m x n Matrix A
+  for (int i = 0; i < sizeM; i++) {
+    for (int j = 0; j < sizeP; j++) {
+      cout << matrixA[i][j] << " ";
+    }
+    cout << "\n";
+  }
+
+} // end of main
