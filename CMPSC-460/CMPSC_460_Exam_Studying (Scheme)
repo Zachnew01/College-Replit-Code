@@ -1,0 +1,37 @@
+(define (sum3 x y z)
+  (+ x (+ y z))
+)
+
+(display (sum3 1 1 1))
+(newline)
+(display (apply sum3 '(1 2 3)))
+;(display (map sum3 '(1 2 3 4 5)))
+
+(newline)
+(display (map + '(1 2 3) '(1 2 3)))
+
+(define (rowAdd r1 r2)
+  (if (or (null? r1) (null? r2)) '()
+      (cons (+ (car r1) (car r2)) (rowAdd (cdr r1) (cdr r2)))
+  )
+)
+
+(define (matrixAdd m1 m2)
+  (if (or (null? m1) (null? m2)) '()
+      (cons (map + (car m1) (car m2)) (matrixAdd (cdr m1) (cdr m2)))
+  )
+)
+(newline)
+(define matrix1 (list '(1 2 3) '(1 2 3)))
+(define matrix2 (list '(1 0 1) '(0 1 0)))
+(display (matrixAdd matrix1 matrix2))
+
+(define (eval expr)
+  (cond ((number? expr) expr)
+        ((eq? (cadr expr) '+) (+ (eval (car expr)) (eval (caddr expr))))
+        ((eq? (cadr expr) '*) (* (eval (car expr)) (eval (caddr expr))))
+  )
+)
+
+(newline)
+(display (eval '((1 + 2) * (5 + 6))))
