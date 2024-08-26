@@ -1,0 +1,184 @@
+// NAME HERE
+// Works Cited / Upgrades
+// none
+
+#include <iostream>
+using namespace std;
+
+////// global constants
+// title of game
+const string TITLE = "CMPSC101 Maze";
+// must complete maze in this many moves
+const int MOVES_ALLOWED = 15;  
+// height of maze  
+const int ROWS = 7;
+// width of maze      
+const int COLUMNS = 7;
+// fill character for empty positions  
+const string F = " ";   
+// player symbol
+const string P = "M"; // "\U0001F603" What is this?
+// vertical wall symbol  
+const string V = "|";   
+// horizontal wall symbol
+const string H = "-";   
+// symbol for the end of the maze
+const string E = "C"; 
+// color code for text in the title
+const int TITLE_COLOR = 36;
+
+string MESSAGES[] = {"message 1", "message 2", "message 3", "message 4", "message 5", "message 6"};
+
+// debugging mode for developer
+const bool DEBUG_MODE = true;
+
+////// global variables
+
+// game board
+string gameboard[ROWS][COLUMNS] =
+//    columns
+// 0 1 2 3 4 5 6
+{                 //rows
+  {H,H,H,H,H,H,H}, // 0
+  {V,P,V,F,F,F,V}, // 1
+  {V,F,V,F,V,F,V}, // 2
+  {V,F,F,F,V,F,V}, // 3
+  {V,F,H,H,V,F,V}, // 4
+  {V,F,F,F,V,E,V}, // 5
+  {H,H,H,H,H,H,H}  // 6
+};
+
+////// function declarations
+
+//return value function
+string getRandomMessage();
+
+//void functions
+void displayGameboard();
+void displayTitle();
+
+//void functions w/ parameters
+void displayStatusPanel(int, int, int, string);
+void validateUserInput(string userInput);
+
+////// main program
+int main()
+{
+  //// local variables
+
+  // player variables
+
+  // user input for direction of movement
+  string playerMove = ""; 
+  // player row #    
+  int playerRow = 1;
+  // player column #          
+  int playerCol = 1;          
+  
+  // game variables
+
+  // flag variable to control game loop
+  bool isGameOver = false; 
+  // # of moves by which player must complete maze   
+  int movesRemaining = MOVES_ALLOWED;  
+  // error message to display to user 
+  string userMessage = "";    
+
+  // initial setup
+  if (DEBUG_MODE == false) system("clear");
+
+	displayGameboard();
+	displayTitle();
+	displayStatusPanel(1, 1, 15, "");
+	cout << getRandomMessage() << endl;
+
+	// main game loop
+  while (!isGameOver)
+  {
+		if (DEBUG_MODE == false) system("clear");
+		displayGameboard();
+		displayTitle();
+		displayStatusPanel(1, 1, 15, "");
+
+		cout << endl;
+    cout << "Press a letter to move:\nw up\ta left\ts down\td right \tq quit: \t";
+    cin >> playerMove;
+
+		validateUserInput(playerMove);
+
+		if (playerMove == "q")
+    {
+      userMessage = "You decided to quit the game. Goodbye.";
+      break;
+    }
+
+		
+  }// end of game loop
+
+	if (DEBUG_MODE == false) system("clear");
+	displayGameboard();
+  displayStatusPanel(1, 1, 15, "");
+	
+
+	return 0;
+}// end of main function
+
+
+////// function definitions
+
+// displays game board
+void displayGameboard()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		cout << "- ";
+	}
+
+	cout << endl;
+
+	for (int i = 0; i < 5; i++)
+	{
+		cout << "|         |" << endl;
+	}
+	
+	for (int i = 0; i < 6; i++)
+	{
+		cout << "- ";
+	}
+
+	cout << endl;
+}// end of displayGameboard function
+
+// displays the title
+void displayTitle()
+{
+	cout << TITLE << endl;
+}// end of displayTitle function
+
+// displays the status panel
+void displayStatusPanel(int playerCol, int playerRow, int movesRemaining, string userMessage)
+{
+	cout << "Player Column: " << playerCol << " Player Row: " << playerRow << " Moves Remaining: " << movesRemaining << endl;
+}// end of displayStatusPanel function
+
+// returns a random message
+string getRandomMessage()
+{
+	int randomInteger = rand() % 6;
+	string randomMessage = MESSAGES[randomInteger];
+
+	//cout << randomMessage << endl;
+
+	return randomMessage;
+}// end of displayTitle function
+
+void validateUserInput(string userInput)
+{
+
+	if (userInput != "a" && userInput != "q")
+	{
+		cout << "invalid input" << endl;
+		return;
+	}
+	
+}// end of validateUserInput function
