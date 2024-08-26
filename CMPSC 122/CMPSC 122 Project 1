@@ -1,0 +1,478 @@
+// Nathaniel Luffey and Zachary Newman - Project #1.cpp
+#include <iostream>
+using namespace std;
+
+// Global Constants
+const int SEMESTER_NUM = 8;
+const int COURSE_NUM = 6;
+const int BOOK_NUM = 6;
+const bool TEST_DESTRUCTORS = true; // Allows cout functions in destructors if true
+
+class Course // Course (Class) Class
+{
+  // Private Member Variables - Course
+  string courseName;
+  string instructorFirstName;
+  string instructorLastName;
+  double grade;
+  int semester;
+  string courseDetail;
+  double credit;
+
+  public:
+  // Public Member Functions - Course
+    Course()  // Default Constructor
+    {
+      courseName = "";
+      instructorFirstName = "";
+      instructorLastName = "";
+      grade = 0.0;
+      semester = 0;
+      courseDetail = "";
+      credit = 0.0;
+    }
+    Course(string cName, string instF, string instL, double grd, int smst, string cDetail, double crd)
+    {  // Constructor w/ variables
+      courseName = cName;
+      instructorFirstName = instF;
+      instructorLastName = instL;
+      grade = grd;
+      semester = smst;
+      courseDetail = cDetail;
+      credit = crd;
+    }
+  // Setter Functions - Course
+  void setCourseName(string input)
+  {
+    courseName = input;
+  }
+  void setInstructFirst(string input)
+  {
+    instructorFirstName = input;
+  }
+  void setInstructLast(string input) 
+  {
+    instructorLastName = input;
+  }
+  void setGrade(double input) 
+  {
+    grade = input;
+  }
+  void setSemester(int input) 
+  {
+    semester = input;
+  }
+  void setCourseDetail(string input)
+  {
+    courseDetail = input;
+  }
+  void setCredit(double input)
+  {  
+    credit = input;
+  }
+  // Getter Functions - Course
+  string getCourseName() const 
+  {
+    return courseName;
+  }
+  string getInstructFirst() const 
+  {
+    return instructorFirstName;
+  }
+  string getInstructLast() const 
+  {
+    return instructorLastName;
+  }
+  double getGrade() const 
+  {
+    return grade;
+  }
+  int getSemester() const 
+  {
+    return semester;
+  }
+  string getCourseDetail() const 
+  {
+    return courseDetail;
+  }
+  double getCredit() const 
+  {
+    return credit;
+  }
+  ~Course() // Destructor Function - Course
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting course with name " << courseName << ".\n";
+    }
+    courseName = "";
+    instructorFirstName = "";
+    instructorLastName = "";
+    grade = 0.0;
+    semester = 0;
+    courseDetail = "";
+    credit = 0.0;
+  }
+
+};
+
+class Book // Book Class
+{
+  // Private Member Variables - Book
+  string bookName;
+  string authorFirstName;
+  string authorLastName;
+  int copyNum;
+  string reserveDate;
+  string returnDate;
+
+  public:
+  // Public Member Functions - Book
+  Book()  // Default Constructor Function
+  {
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "00/00/0000";
+    returnDate = "00/00/0000";
+  }
+  Book(string bName, string authFname, string authLname, int cNum, string reserveD, string returnD)
+  {  // Constructor w/ variables
+    bookName = bName;
+    authorFirstName = authFname;
+    authorLastName = authLname;
+    copyNum = cNum;
+    reserveDate = reserveD;
+    returnDate = returnD;
+  }
+  // Setter Functions - Course
+  void setBookName(string input) 
+  {
+    bookName = input;
+  }
+  void setAuthorFirst(string input) 
+  {
+    authorFirstName = input;
+  }
+  void setAuthorLast(string input) 
+  {
+    authorLastName = input;
+  }
+  void setCopyNum(int input) 
+  {
+    copyNum = input;
+  }
+  void setReserveDate(string input) 
+  {
+    reserveDate = input;
+  }
+  void setReturnDate(string input) 
+  {
+    returnDate = input;
+  }
+  // Getter Functions - Course
+  string getBookName() const 
+  {
+    return bookName;
+  }
+  string getAuthorFirst() const 
+  {
+    return authorFirstName;
+  }
+  string getAuthorLast() const 
+  {
+    return authorLastName;
+  }
+  int getCopyNum() const 
+  {
+    return copyNum;
+  }
+  string getReserveDate() const 
+  {
+    return reserveDate;
+  }
+  string getReturnDate() const 
+  {
+    return returnDate;
+  }
+  ~Book() // Destructor Function - Book
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting book with name " << bookName << ".\n";
+    }
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "";
+    returnDate = "";
+  }
+};
+
+class Student // Student Class
+{
+  double gpa;
+  string studentName;
+  long studentId;
+  int semester;
+  Course courses[SEMESTER_NUM][COURSE_NUM];
+  Book books[BOOK_NUM];
+  
+public:
+  Student()
+  {
+    gpa = 4.0;
+    studentName = " ";
+    studentId = 0;
+    semester = 0;
+  }
+
+  Student(double gp, string stdntNm, double stdntD, int smstr)
+  {
+    gpa = gp;
+    studentName = stdntNm;
+    studentId = stdntD;
+    semester = smstr;
+  }
+  
+  void setGPA(double input)
+  {
+    gpa = input;
+  }
+
+  void setName(string input)
+  {
+    studentName = input;
+  }
+
+  void setStudentID(long input)
+  {
+    studentId = input;
+  }
+
+  void setSemester(int input)
+  {
+    semester = input;
+  }
+  
+  double getGPA() const 
+  {
+    return gpa;
+  }
+  
+  string getName() const 
+  {
+    return studentName;
+  }
+
+  long getStudentId() const
+  {
+    return studentId;
+  }
+
+  int getSemester() const 
+  {
+    return semester;
+  }
+  
+  void addCourse()  // Adds a course to Student
+  {
+    // Variable Declarations
+    int semesterNum;
+    int courseNum;
+    string courseName;
+    string instructorFirstName;
+    string instructorLastName;
+    double grade;
+    string courseDetail;
+    double credit;
+    // User Input
+    cout << "\nInput the semester of the course to add (1-" << SEMESTER_NUM << "): ";
+    cin >> semesterNum;
+    semesterNum -= 1;
+    cout << "Input the number of the course to add (1-" << COURSE_NUM << "): ";
+    cin >> courseNum;
+    courseNum -= 1;
+    cout << "Input the name of the course: ";
+    getline (cin >> ws,courseName);
+    cout << "Input the instructor's first name: ";
+    cin >> instructorFirstName;
+    cout << "Input the instructor's last name: ";
+    cin >> instructorLastName;
+    cout << "Input the current grade for the course: ";
+    cin >> grade;
+    cout << "Input the details of the course: ";
+    getline (cin >> ws,courseDetail);
+    cout << "Input the credit gained from the course: ";
+    cin >> credit;
+    // Course Data Input
+    courses[semesterNum][courseNum].setCourseName(courseName);
+    courses[semesterNum][courseNum].setInstructFirst(instructorFirstName);
+    courses[semesterNum][courseNum].setInstructLast(instructorLastName);
+    courses[semesterNum][courseNum].setGrade(grade);
+    courses[semesterNum][courseNum].setSemester(semesterNum + 1);
+    courses[semesterNum][courseNum].setCourseDetail(courseDetail);
+    courses[semesterNum][courseNum].setCredit(credit);
+  }
+  
+  void removeCourse() // Removes a course from Student and reverts it to default values
+  {
+    // Variable Declarations
+    int semesterNum;
+    int courseNum;
+    // User Input
+    cout << "\nInput the semester of the course to remove (1-" << SEMESTER_NUM << "): ";
+    cin >> semesterNum;
+    semesterNum -= 1;
+    cout << "Input the number of the course to remove (1-" << COURSE_NUM << "): ";
+    cin >> courseNum;
+    courseNum -= 1;
+    // Course Data reset/removal
+    courses[semesterNum][courseNum].setCourseName("");
+    courses[semesterNum][courseNum].setInstructFirst("");
+    courses[semesterNum][courseNum].setInstructLast("");
+    courses[semesterNum][courseNum].setGrade(0.0);
+    courses[semesterNum][courseNum].setSemester(0);
+    courses[semesterNum][courseNum].setCourseDetail("");
+    courses[semesterNum][courseNum].setCredit(0.0);
+  }
+  
+  void borrowBook() // Adds a book to Student
+  {
+    // Variable Declarations
+    int bookNum;
+    string bookName;
+    string authorFirstName;
+    string authorLastName;
+    int copyNum;
+    string reserveDate;
+    string returnDate;
+    // User Input
+    cout << "\nInput the book number for this title: ";
+    cin >> bookNum;
+    bookNum -= 1;
+    cout << "Input the number of copies: ";
+    cin >> copyNum;
+    cout << "Input the title of the book: ";
+    getline (cin >> ws,bookName);
+    cout << "Input the author's first name: ";
+    cin >> authorFirstName;
+    cout << "Input the author's last name: ";
+    cin >> authorLastName;
+    cout << "Input the date the book was reserved: ";
+    cin >> reserveDate;
+    cout << "Input the book's return date: ";
+    cin >> returnDate;
+    // Book Data Input
+    books[bookNum].setBookName(bookName);
+    books[bookNum].setAuthorFirst(authorFirstName);
+    books[bookNum].setAuthorLast(authorLastName);
+    books[bookNum].setCopyNum(copyNum);
+    books[bookNum].setReserveDate(reserveDate);
+    books[bookNum].setReturnDate(returnDate);
+  }
+  
+  void returnBook() // Removes a book from Student and reverts it to default values
+  {
+    // Variable Declarations
+    int bookNum;
+    // User Input
+    cout << "\nInput the book you would like to return: ";
+    cin >> bookNum;
+    bookNum -= 1;
+    // Book Data Reset/Removal
+    books[bookNum].setBookName("");
+    books[bookNum].setAuthorFirst("");
+    books[bookNum].setAuthorLast("");
+    books[bookNum].setCopyNum(0);
+    books[bookNum].setReserveDate("");
+    books[bookNum].setReturnDate("");
+  }
+
+  void displayBook()
+  {
+    // Variable Declarations
+    int bookNum;
+    // User Input
+    cout << "\nInput the book number to display: ";
+    cin >> bookNum;
+    bookNum -= 1;
+    // Formatted Book Object Data Display
+    cout << "Book Title: " << books[bookNum].getBookName() << endl;
+    cout << "Author Name: " << books[bookNum].getAuthorLast();
+    cout << ", " << books[bookNum].getAuthorFirst() << endl;
+    cout << "Number of Copies: " << books[bookNum].getCopyNum() << endl;
+    cout << "Reserve Date: " << books[bookNum].getReserveDate() << endl;
+    cout << "Return Date: " << books[bookNum].getReturnDate() << endl;
+  }
+
+  void displayStudentRecord()
+  {
+    cout << "\n -|- Student Record -|-  " << endl;
+    cout << "Student Name: " << studentName << " - Student ID: " << studentId << endl;
+    cout << "Student GPA: " << gpa << " - Current Semester: " << semester << endl;
+    cout << "\n - Current Semester Courses - " << endl;
+    for (int i = 0; i < COURSE_NUM; i++) // Loops through courses in the current semester
+      {
+        // If statement validates if course exist (not default)
+        if (courses[semester - 1][i].getSemester() == semester)
+        { 
+          cout << "Course #" << i + 1 << ":" << endl;
+          cout << "   Course Name: " << courses[semester - 1][i].getCourseName() << endl;
+          cout << "   Course Instructor: " << courses[semester - 1][i].getInstructLast();
+          cout << ", " << courses[semester - 1][i].getInstructFirst() << endl;
+          cout << "   Course Grade: " << courses[semester - 1][i].getGrade() << "%";
+          cout << " - Credits Earned: " << courses[semester - 1][i].getCredit() << endl;
+          cout << "   Course Details: " << courses[semester - 1][i].getCourseDetail() << endl;
+        }
+      }
+    cout << "\n - Previous Semester Courses - " << endl;
+    // Loops through all previous semesters and courses.
+    for (int i = semester - 1; i > 0; i--)
+    {
+      for(int j = 0; j < COURSE_NUM; j++)
+      {
+        // If statement validates if course exist (not default)
+        if (courses[i - 1][j].getSemester() == i)
+        {
+          cout << "Course #" << j + 1 << ":" << endl;
+          cout << "   Course Name: " << courses[i - 1][j].getCourseName() << endl;
+          cout << "   Course Instructor: " << courses[i - 1][j].getInstructLast();
+          cout << ", " << courses[i - 1][j].getInstructFirst() << endl;
+          cout << "   Course Grade: " << courses[i - 1][j].getGrade() << "%";
+          cout << " - Credits Earned: " << courses[i - 1][j].getCredit() << endl;
+          cout << "   Course Details: " << courses[i - 1][j].getCourseDetail() << endl;
+        }
+      }
+    }
+    cout << " - End of Student Record - " << endl;
+  } // End of displayStudentRecord
+
+  ~Student()
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting student record for " << studentName << "." << endl;
+    }
+    gpa = 0;
+    studentName = " ";
+    studentId = 0;
+    semester = 0;
+  }
+  
+};
+
+int main()  // Main Function
+{
+  Student student1(3.5, "Test Name", 100001, 2); // Student Initialization
+  // Course and Book Class setting functions
+  student1.addCourse();
+  student1.addCourse();
+  student1.addCourse();
+  student1.borrowBook();
+  student1.borrowBook();
+  // Book and Student Record display functions
+  student1.displayBook();
+  student1.displayBook();
+  student1.displayStudentRecord();
+  return 0;
+}
