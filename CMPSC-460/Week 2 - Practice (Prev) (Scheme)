@@ -1,0 +1,42 @@
+; - Week 2 - CMPSC 460 Practice -
+
+; #1 - Sum of Squares
+(define (sqr x) (* x x))
+(define (sumSqr lst)
+  (if (null? lst) 0
+      (+ (sqr (car lst)) (sumSqr (cdr lst)))
+  )
+)
+
+; #2 - Reverse List
+(define (reverse lst)
+  (if (null? lst) '()
+    (append (reverse (cdr lst)) (list (car lst)))
+  )  
+)
+
+; #3 - Square Each Element of the List
+(define (sqrLst lst) 
+  (if (null? lst) '()
+      (cons (* (car lst) (car lst)) (sqrLst (cdr lst)))
+  )
+)
+
+#|
+; #4 - Return Kth element of the list
+(define (kth lst k)
+  (if (= k 1) (car lst)
+      (kth (cdr lst) (- k 1))
+  )
+)
+|# 
+
+; #5 - Return Smallest Element of the list
+(define (smallestHelper lst s)
+  (if (< (car lst) s) (car lst)
+      (smallestHelper (cdr lst) s)
+  )
+)
+(define (smallest lst)
+  (smallestHelper lst (car lst)
+)
