@@ -1,0 +1,29 @@
+// array intro with a loop
+
+#include <iostream>
+using namespace std;
+
+const int LENGTH = 5;   // number of scores
+
+int main()
+{
+	int scores[LENGTH];   // exam scores in a semester class
+
+	int sum = 0;          // sum of exam scores
+	double average = 0.0; // average exam score
+	int i = 0;            // loop variable
+
+	for (i = 0; i < LENGTH; i++)
+	{
+		cout << "Enter next grade: ";
+		cin >> scores[i];
+		sum = sum + scores[i];
+	}
+
+	average =  double (sum)  / LENGTH;
+  // average = static_cast<double> sum / LENGTH;
+
+	cout << average << endl;
+
+	return 0;
+}// end of main
