@@ -1,0 +1,870 @@
+ # Valuable Links:
+# - https://www.geeksforgeeks.org/oracle-database-connection-in-python/
+# - https://drive.google.com/file/d/1MJy3LfknxMwQVlMLgts8yX0rOWSq2srN/view
+# - https://cx-oracle.readthedocs.io/en/latest/
+import cx_Oracle
+import time
+import os
+
+def Main():
+  connection = None
+  cursor = None
+  contProgram1 = True # boolean flag for continuing the main while loop
+  contProgram2 = True # boolean flag for continuing the while loop for Staff Page
+  try:
+    dsn_tns = cx_Oracle.makedsn('h3oracle.ad.psu.edu', '1521', service_name = 'orclpdb.ad.psu.edu')
+    connection = cx_Oracle.connect(user = "<username>", password = "<password>", dsn = dsn_tns)
+    # show the version of the Oracle Database
+    print(connection.version)
+    cursor = connection.cursor()
+    resetFlag = True if input("Reset the database tables (y/n): ") == "y" else False
+    if(resetFlag): 
+      resetDbTables(cursor) # Creates/Resets the relevant tables in the database
+    
+    while(contProgram1):
+      print("\n -=+*+=- VZ Loan Database Program -=+*+=- ")
+      print("- LOGIN PAGE -")
+      print("[1] - Staff login")
+      print("[2] - Customer login")
+      print("[0] - Exit Program")
+      
+      userAnswer = input("Enter the number corresponding to desired action: ")
+
+      if (userAnswer == "1"):
+        password = input("Staff Login Password: ")
+        if(password == "admin12345"):
+          contProgram2 = True
+          while(contProgram2):
+            # os.system('cls') # Potential for console clearing
+            print("\n - Staff Database Portal - ")
+            print("[1] - Add Customer")
+            print("[2] - Browse Customers")
+            print("[3] - Search for a Customer")
+            print("[4] - Edit Customer")
+            print("[5] - Remove Customer")
+            print("[6] - Browse Loans")
+            print("[7] - Search Loan by Loan ID")
+            print("[8] - Add Loan to Customer")
+            print("[9] - Edit Loan for Customer")
+            print("[10] - Remove Loan from Customer")
+            print("[11] - Commit Changes to Database")
+            print("[0] - Exit Staff Portal")
+            userAnswer = input("Enter the number corresponding to desired action: ")
+            print("")
+            if(userAnswer == "0"):
+              contProgram2 = False;
+            elif(userAnswer == "1"):
+              addCustomer(cursor)
+            elif(userAnswer == "2"):
+              browseCustomers(cursor)
+            elif(userAnswer == "3"):
+              searchCustomers(cursor)
+            elif(userAnswer == "4"):
+              editCustomer(cursor)
+            elif(userAnswer == "5"):
+              removeCustomer(cursor)
+            elif(userAnswer == "6"):
+              browseLoans(cursor)
+            elif(userAnswer == "7"):
+              searchLoans(cursor)  
+            elif(userAnswer == "8"):
+              addLoan(cursor)
+            elif(userAnswer == "9"):
+              editLoan(cursor)
+            elif(userAnswer == "10"):
+              removeLoans(cursor)
+            elif(userAnswer == "11"):
+              cursor.execute("Commit")
+              print("Database Changes Committed")
+            else:
+              print("Error - Invalid Option")
+          # End of Staff While Loop
+        else:
+          print("Error - Incorrect Password\n")
+      elif (userAnswer == "2"):
+        userId = input ("Enter your id: ")
+        cursor.execute("SELECT * FROM Customer WHERE c_id = :input", [userId])
+        userInfo = cursor.fetchone()
+        if userInfo: 
+          try: 
+            cursor.execute("SELECT * FROM Customer JOIN Mortgage ON Customer.c_id = Mortgage.c_id")
+            tableRows = cursor.fetchall() 
+            for row in tableRows: 
+              print(row)
+
+          except cx_Oracle.DatabaseError as e:  
+            print("Error: " + e) 
+
+          try: 
+            cursor.execute("SELECT * FROM Customer JOIN Auto_Loan ON Customer.c_id = Auto_Loan.c_id")
+            tableRows = cursor.fetchall() 
+            for row in tableRows: 
+              print(row)
+          except cx_Oracle.DatabaseError as e:  
+            print("Error: " + e) 
+          
+          try: 
+            cursor.execute("SELECT * FROM Customer JOIN Personal_Loan ON Customer.c_id = Personal_Loan.c_id")
+            tableRows = cursor.fetchall() 
+            for row in tableRows: 
+              print(row)
+          except cx_Oracle.DatabaseError as e:  
+            print("Error: " + e) 
+        else: 
+          print("You have no information")
+        print("")
+      else: 
+        contProgram1 = False
+    # End of login while loop
+    # time.sleep(600) # used to make sure that the code is running
+  
+  except cx_Oracle.Error as error:
+    print(error)
+  finally:
+    # release the connection
+    if cursor:
+      cursor.close()
+    if connection:
+      connection.close()
+# END OF MAIN
+
+def resetDbTables(crsr):
+  try:
+    crsr.execute("drop table Personal_Loan")
+    print("Table Personal_Loan Dropped Successfully")
+  except cx_Oracle.Error as error:
+    print(error)
+  try:
+    crsr.execute("drop table Auto_Loan")
+    print("Table Auto_Loan Dropped Successfully")
+  except cx_Oracle.Error as error:
+    print(error)
+  try:
+    crsr.execute("drop table Mortgage")
+    print("Table Mortgage Dropped Successfully")
+  except cx_Oracle.Error as error:
+    print(error)
+  try:
+    crsr.execute("drop table Customer")
+    print("Table Customer Dropped Successfully")
+  except cx_Oracle.Error as error:
+    print(error)
+  try:
+    crsr.execute("create table Customer(c_id varchar(11) primary key,first_name varchar(20) not null,last_name varchar(20) not null,income numeric(15,2) not null,email varchar(50),phone_number numeric(10,0))")
+    print("Table Created successfully")
+    crsr.execute("create table Mortgage(loan_id varchar(15) primary key, c_id varchar(11) not null, loan_amount numeric(14,2) not null, interest_rate numeric(5,2) not null, amount_paid numeric(14,2) not null, start_date date not null,  num_payments int not null, end_date date not null, house_num int not null, street varchar(20) not null, house_area numeric(5, 0), num_bedrooms smallint, num_bathrooms smallint, house_price numeric(14,2) not null, foreign key (c_id) references Customer on delete cascade)")
+    print("Table Created successfully")
+    crsr.execute("create table Auto_Loan(loan_id varchar(15) primary key, c_id varchar(11) not null, loan_amount numeric(14,2) not null, interest_rate numeric(5,2) not null, amount_paid numeric(14,2) not null, start_date date not null,  num_payments int not null, end_date date not null, make varchar(15) not null, year numeric(4, 0) not null, VIN varchar(17) not null, model varchar(20)not null, foreign key(c_id) references Customer on delete cascade)")
+    print("Table Created successfully")
+    crsr.execute("create table Personal_Loan(loan_id varchar(15) primary key, c_id varchar(11) not null, loan_amount numeric(14,2) not null, interest_rate numeric(5,2) not null, amount_paid numeric(14,2) not null, start_date date not null,  num_payments int not null, end_date date not null, loan_purpose varchar(50) not null,  foreign key(c_id) references Customer on delete cascade)")
+    print("Table Created successfully")
+  except cx_Oracle.Error as error:
+    print(error)
+# END OF RESETDBTABLES
+
+def addCustomer(crsr):
+  cID = input("Enter Customer ID: ")
+  fn = input("Enter Customer's First Name: ")
+  ln = input("Enter Customer's Last Name: ")
+  inc =  input("Enter Customer's verified income: ")
+  email = input("Enter Customer's Email: ")
+  pn = input("Enter Customer's Phone Number (Just Digits): ")
+  try:
+    crsr.execute("insert into Customer values(:id, :fn, :ln, :inc, :em, :pn)", [cID, fn, ln, inc, email, pn])
+    print("Customer Successfully Inserted")
+  except cx_Oracle.Error as error:
+    print("Invalid Customer Insert Information")
+    print(error)
+  print("")
+# END OF ADDCUSTOMER
+
+def browseCustomers(crsr):
+  try:
+    print(" - Customer List: - ")
+    for row in crsr.execute('select * from Customer'):
+      print(row)
+  except cx_Oracle.Error as error:
+    print(error)
+  print("")
+# END OF BROWSECUSTOMERS
+
+def searchCustomers(crsr):
+  print("Search Customer by [#]: ")
+  print("[1] - Customer ID")
+  print("[2] - First Name")
+  print("[3] - Last Name")
+  print("[4] - Income")
+  print("[5] - Email")
+  print("[6] - Phone Number")
+  print("[0] - Back")
+  userInput = input("Enter the number corresponding to desired action: ")
+  print("")
+  if(userInput == "1"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with ID = " + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where c_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "2"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with First Name = " + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where first_name like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "3"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with Last Name = " + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where last_name like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "4"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with Income = $" + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where income like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "5"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with Email = " + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where email like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "6"):
+    userInput = input("Enter Search Term: ")
+    try:
+      print("Customers with Phone Number = " + userInput)
+      userInput = "%" + userInput + "%"
+      for row in crsr.execute('select * from Customer where phone_number like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput != "0"):
+    print("Error - Invalid Input")
+  print("")
+# END OF SEARCHCUSTOMERS
+
+def editCustomer(crsr):
+  c_ID = input("Enter Customer ID to edit: ")
+  editRepeat = True
+  while(editRepeat):
+    print("Edit Customer's [#] field: ")
+    print("[1] - First Name")
+    print("[2] - Last Name")
+    print("[3] - Income")
+    print("[4] - Email")
+    print("[5] - Phone Number")
+    print("[0] - Back")
+    userInput = input("Enter the number corresponding to desired action: ")
+    print("")
+    if(userInput == "1"):
+      try:
+        userInput = input("Enter the new First Name: ")
+        crsr.execute("update Customer set first_name = :one where c_id = :two", [userInput, c_ID])
+      except cx_Oracle.Error as error:
+        print(error)
+    elif(userInput == "2"):
+      userInput = input("Enter the new Last Name: ")
+      try:
+        crsr.execute("update Customer set last_name = :one where c_id = :id", [userInput, c_ID])
+      except cx_Oracle.Error as error:
+        print(error)
+    elif(userInput == "3"):
+      userInput = input("Enter the new Income: ")
+      try:
+        crsr.execute("update Customer set income = :one where c_id = :id", [userInput, c_ID])
+      except cx_Oracle.Error as error:
+        print(error)
+    elif(userInput == "4"):
+      userInput = input("Enter the new Email: ")
+      try:
+        crsr.execute("update Customer set email = :one where c_id = :id", [userInput, c_ID])
+      except cx_Oracle.Error as error:
+        print(error)
+    elif(userInput == "5"):
+      userInput = input("Enter the new Phone Number: ")
+      try:
+        crsr.execute("update Customer set phone_number = :one where c_id = :id", [userInput, c_ID])
+      except cx_Oracle.Error as error:
+        print(error)
+    elif(userInput == "0"):
+      editRepeat = False
+    else:
+      print("Error - Invalid Input")
+    print("")
+  # End of While Loop
+# END OF EDITCUSTOMER
+
+def removeCustomer(crsr):
+  cust_id= input("Enter the ID of the customer to be removed: ")
+  try: 
+    crsr.execute("DELETE FROM Customer WHERE c_id = :input", [cust_id])
+  except cx_Oracle.Error as error: 
+    print("Error deleting customer: " + error)
+#END OF REMOVECUSTOMER
+
+def browseLoans(crsr): 
+  try:
+    print(" - Mortgage: - ")
+    for row in crsr.execute('select * from Mortgage'):
+      print(row)
+  except cx_Oracle.Error as error:
+    print(error)
+  
+  try:
+    print(" - Auto Loans: - ")
+    for row in crsr.execute('select * from Auto_Loan'):
+      print(row)
+  except cx_Oracle.Error as error:
+    print(error)
+
+  try:
+    print(" - Personal Loans: - ")
+    for row in crsr.execute('select * from Personal_Loan'):
+      print(row)
+  except cx_Oracle.Error as error:
+    print(error)
+  print("")
+# END OF BROWSELOANS
+
+def searchLoans(crsr): 
+  print("Search Loan by [#]: ")
+  print("[1] - Loan ID")
+  print("[2] - Customer ID")
+  print("[0] - Back")
+  userInput = input("Enter the number corresponding to desired action: ")
+  print("")
+  if(userInput == "1"):
+    userInput = input("Enter the loan ID: ")
+    userInput = "%" + userInput + "%"
+    try:
+      for row in crsr.execute('select * from Mortgage where loan_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+    try: 
+      for row in crsr.execute('select * from Auto_Loan where loan_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)  
+    try:
+      for row in crsr.execute('select * from Personal_Loan where loan_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "2"):
+    userInput = input("Enter the customer ID: ")
+    userInput = "%" + userInput + "%"
+    try:
+      for row in crsr.execute('select * from Mortgage where c_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+    try: 
+      for row in crsr.execute('select * from Auto_Loan where c_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)  
+    try:
+      for row in crsr.execute('select * from Personal_Loan where c_id like :input', [userInput]):
+        print(row)
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput != "0"):
+    print("Error - Invalid Input")
+  print("")
+# END OF SEARCHLOANS
+
+def addLoan(crsr):
+  print("Types of Loans to add: ")
+  print("[1] - Mortgage")
+  print("[2] - Auto Loan")
+  print("[3] - Personal Loan")
+  userInput = input("Add Loan of Type [#]: ")
+  print("")
+  if(userInput != "1" and userInput != "2" and userInput != "3"):
+    print("Error - Invalid Loan Type")
+  else:
+    c_ID = input("Enter the ID of the customer to add the loan to: ")
+    l_ID = input("Enter Loan's ID: ")
+    la = input("Enter Loan Ammount: $")
+    ir = input("Enter Loan's Interest Rate: ")
+    ap = input("Enter Amount Paid: ")
+    flagW = True
+    sDay = 0
+    sMonth = 0
+    sYear = 0
+    while (flagW):
+      tempDay = input("Enter Start Date - Day: ")
+      tempMonth = input("Enter Start Date - Month: ")
+      tempYear = input("Enter Start Date - Year: ")
+      print("Test Message 1")
+      time.sleep(10)
+      if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+        print("Test Message 2")
+        time.sleep(10)
+        flagW = False
+        sDay = int(tempDay)
+        sMonth = int(tempMonth)
+        sYear = int(tempYear)
+        print("Test Message 3")
+        time.sleep(10)
+      else:
+        print("Invalid Date - Repeat Inputs")
+    # End While
+    print(sDay)
+    print(sMonth)
+    print(sYear)
+    time.sleep(100)
+    sDate = cx_Oracle.Date(sYear, sMonth, sDay)
+    np = input("Enter Number of Payments: ")
+    flagW = True
+    eDay = 0
+    eMonth = 0
+    eYear = 0
+    while (flagW):
+      tempDay = input("Enter End Date - Day: ")
+      tempMonth = input("Enter End Date - Month: ")
+      tempYear = input("Enter End Date - Year: ")
+      if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+        flagW = False
+        eDay = int(tempDay)
+        eMonth = int(tempMonth)
+        eYear = int(tempYear)
+      else:
+        print("Invalid Date - Repeat Inputs")
+    # End While
+    eDate = cx_Oracle.Date(eYear, eMonth, eDay)
+    if(userInput == "1"):
+      hn = input("Enter House Num: ")
+      st = input("Enter Street: ")
+      ha = input("Input 5-digit House Area Code: ")
+      nbd = input("Input Number of Bedrooms: ")
+      nba = input("Input Number of Bathrooms: ")
+      hp = input("Input House Price: ")
+      try:
+        crsr.execute("insert into Mortgage values(:lID, :cID, :la, :ir, :ap, :sd, :np, :ed, :hn, :st, :ha, :nbd, :nba, :hp)", [l_ID, c_ID, la, ir, ap, sDate, np, eDate, hn, st, ha, nbd, nba, hp])
+        print("Loan Successfully Inserted")
+      except cx_Oracle.Error as error:
+        print("Invalid Loan Insert Information")
+        print(error)
+    elif(userInput == "2"):
+      make = input("Enter Auto Make: ")
+      year = input("Enter Auto Year: ")
+      vin = input("Enter Auto VIN: ")
+      model = input("Enter Auto Model: ")
+      try:
+        crsr.execute("insert into Auto_Loan values(:lID, :cID, :la, :ir, :ap, :sd, :np, :ed, :mk, :yr, :vin, :md)", [l_ID, c_ID, la, ir, ap, sDate, np, eDate, make, year, vin, model])
+        print("Loan Successfully Inserted")
+      except cx_Oracle.Error as error:
+        print("Invalid Loan Insert Information")
+        print(error)
+    else:
+      lp = input("Enter Purpose of Loan: ")
+      try:
+        crsr.execute("insert into Personal_Loan values(:lID, :cID, :la, :ir, :ap, :sd, :np, :ed, :lp)", [l_ID, c_ID, la, ir, ap, sDate, np, eDate, lp])
+        print("Loan Successfully Inserted")
+      except cx_Oracle.Error as error:
+        print("Error - Invalid Loan Insert Information")
+        print(error)
+  print("")
+# END OF ADD LOAN
+
+def editLoan(crsr):
+  editRepeat = True
+  print("Types of Loans to Edit: ")
+  print("[1] - Mortgage")
+  print("[2] - Auto Loan")
+  print("[3] - Personal Loan")
+  print("[0] - Back")
+  userInput = input("Enter the number corresponding to desired action: ")
+  print("")
+  if(userInput == "1"):
+    l_ID = input("Enter ID of the Mortgage Loan to Edit: ")
+    while(editRepeat):
+      print("Edit Mortgage's [#] Field: ")
+      print("[1] - Loan Amount")
+      print("[2] - Interest Rate")
+      print("[3] - Amount Paid")
+      print("[4] - Start Date")
+      print("[5] - Number of Payments")
+      print("[6] - End Date")
+      print("[7] - House Number")
+      print("[8] - Street")
+      print("[9] - House Area Code")
+      print("[10] - Number of Bedrooms")
+      print("[11] - Number of Bathrooms")
+      print("[12] - House Price")
+      print("[0] - Back")
+      userInput = input("Enter the number corresponding to desired action: ")
+      print("")
+      if(userInput == "1"):
+        try:
+          userInput = input("Enter the new Loan Amount: ")
+          crsr.execute("update Mortgage set loan_amount = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "2"):
+        try:
+          userInput = input("Enter the new Interest Rate: ")
+          crsr.execute("update Mortgage set interest_rate = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "3"):
+        try:
+          userInput = input("Enter the new Amount Paid: ")
+          crsr.execute("update Mortgage set amount_paid = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "4"):
+        try:
+          flagW = True
+          sDay = 0
+          sMonth = 0
+          sYear = 0
+          while (flagW):
+            tempDay = input("Enter Start Date - Day: ")
+            tempMonth = input("Enter Start Date - Month: ")
+            tempYear = input("Enter Start Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              sDay = int(tempDay)
+              sMonth = int(tempMonth)
+              sYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          sDate = cx_Oracle.Date(sYear, sMonth, sDay)
+          crsr.execute("update Mortgage set start_date = :one where loan_id = :two", [sDate, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "5"):
+        try:
+          userInput = input("Enter the new Number of Payments: ")
+          crsr.execute("update Mortgage set num_payments = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "6"):
+        try:
+          flagW = True
+          eDay = 0
+          eMonth = 0
+          eYear = 0
+          while (flagW):
+            tempDay = input("Enter End Date - Day: ")
+            tempMonth = input("Enter End Date - Month: ")
+            tempYear = input("Enter End Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              eDay = int(tempDay)
+              eMonth = int(tempMonth)
+              eYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          eDate = cx_Oracle.Date(eYear, eMonth, eDay)
+          crsr.execute("update Mortgage set end_date = :one where loan_id = :two", [eDate, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "7"):
+        try:
+          userInput = input("Enter the new House Number: ")
+          crsr.execute("update Mortgage set house_num = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "8"):
+        try:
+          userInput = input("Enter the new Street: ")
+          crsr.execute("update Mortgage set street = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "9"):
+        try:
+          userInput = input("Enter the new House Area Code: ")
+          crsr.execute("update Mortgage set house_area = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "10"):
+        try:
+          userInput = input("Enter the new Number of Bedrooms: ")
+          crsr.execute("update Mortgage set num_bedrooms = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "11"):
+        try:
+          userInput = input("Enter the new Number of Bathrooms: ")
+          crsr.execute("update Mortgage set num_bathrooms = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "12"):
+        try:
+          userInput = input("Enter the new House Price: ")
+          crsr.execute("update Mortgage set house_price = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "0"):
+        editRepeat = False
+      else:
+        print("Error - Invalid Edit Field")
+    # End of Option 1 While Loop
+  elif(userInput == "2"):
+    l_id = input("Enter ID of the Auto_Loan to Edit: ")
+    while(editRepeat):
+      print("Edit Auto Loan's [#] Field: ")
+      print("Edit Mortgage's [#] Field: ")
+      print("[1] - Loan Amount")
+      print("[2] - Interest Rate")
+      print("[3] - Amount Paid")
+      print("[4] - Start Date")
+      print("[5] - Number of Payments")
+      print("[6] - End Date")
+      print("[7] - VIN") 
+      print("[8] - model")
+      print("[0] - Back")
+      userInput = input("Enter the number corresponding to desired action: ")
+
+      if(userInput == 1): 
+        try: 
+          userInput = input("Enter the new loan amount: ")
+          crsr.execute("UPDATE Auto_Loan SET loan_amount = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif (userInput == 2):   
+        try: 
+          userInput = input("Enter the new interest rate: ")
+          crsr.execute("UPDATE Auto_Loan SET interest_rate = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif (userInput == 3):   
+        try: 
+          userInput = input("Enter the new amount paid: ")
+          crsr.execute("UPDATE Auto_Loan SET amount_paid = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)    
+      elif (userInput == 4):   
+        try: 
+          flagW = True
+          sDay = 0
+          sMonth = 0
+          sYear = 0
+          while (flagW):
+            tempDay = input("Enter Start Date - Day: ")
+            tempMonth = input("Enter Start Date - Month: ")
+            tempYear = input("Enter Start Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              sDay = int(tempDay)
+              sMonth = int(tempMonth)
+              sYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          sDate = cx_Oracle.Date(sYear, sMonth, sDay)
+          crsr.execute("UPDATE Auto_Loan SET start_date = :one WHERE loan_id=:two", [sDate, l_id])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif (userInput == 5):   
+        try: 
+          userInput = input("Enter the new number of payments: ")
+          crsr.execute("UPDATE Auto_Loan SET num_payments = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif (userInput == 6):   
+        try: 
+          flagW = True
+          eDay = 0
+          eMonth = 0
+          eYear = 0
+          while (flagW):
+            tempDay = input("Enter End Date - Day: ")
+            tempMonth = input("Enter End Date - Month: ")
+            tempYear = input("Enter End Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              eDay = int(tempDay)
+              eMonth = int(tempMonth)
+              eYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          eDate = cx_Oracle.Date(eYear, eMonth, eDay)
+          crsr.execute("UPDATE Auto_Loan SET end_date = :one WHERE loan_id=:two", [eDate, l_id])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif (userInput == 7):   
+        try: 
+          userInput = input("Enter the new VIN: ")
+          crsr.execute("UPDATE Auto_Loan SET VIN = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)   
+      elif (userInput == 8):   
+        try: 
+          userInput = input("Enter the new model: ")
+          crsr.execute("UPDATE Auto_Loan SET model = :one WHERE loan_id=:two", [userInput, l_id])
+        except cx_Oracle.Error as error:
+          print(error)    
+      elif(userInput == "0"):
+        editRepeat = False    
+      else: 
+        print("Error- Invalid Edit Field")
+      #End of option 2 while loop
+  elif(userInput == "3"):
+    l_ID = input("Enter ID of the Personal_Loan to Edit: ")
+    while(editRepeat):
+      print("Edit Mortgage's [#] Field: ")
+      print("[1] - Loan Amount")
+      print("[2] - Interest Rate")
+      print("[3] - Amount Paid")
+      print("[4] - Start Date")
+      print("[5] - Number of Payments")
+      print("[6] - End Date")
+      print("[7] - Loan Purpose")
+      print("[0] - Back")
+      userInput = input("Enter the number corresponding to desired action: ")
+      print("")
+      if(userInput == "1"):
+        try:
+          userInput = input("Enter the new Loan Amount: ")
+          crsr.execute("update Personal_Loan set loan_amount = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "2"):
+        try:
+          userInput = input("Enter the new Interest Rate: ")
+          crsr.execute("update Personal_Loan set interest_rate = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "3"):
+        try:
+          userInput = input("Enter the new Amount Paid: ")
+          crsr.execute("update Personal_Loan set amount_paid = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "4"):
+        try:
+          flagW = True
+          sDay = 0
+          sMonth = 0
+          sYear = 0
+          while (flagW):
+            tempDay = input("Enter Start Date - Day: ")
+            tempMonth = input("Enter Start Date - Month: ")
+            tempYear = input("Enter Start Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              sDay = int(tempDay)
+              sMonth = int(tempMonth)
+              sYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          sDate = cx_Oracle.Date(sYear, sMonth, sDay)
+          crsr.execute("update Personal_Loan set start_date = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "5"):
+        try:
+          userInput = input("Enter the new Number of Payments: ")
+          crsr.execute("update Personal_Loan set num_payments = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "6"):
+        try:
+          flagW = True
+          eDay = 0
+          eMonth = 0
+          eYear = 0
+          while (flagW):
+            tempDay = input("Enter End Date - Day: ")
+            tempMonth = input("Enter End Date - Month: ")
+            tempYear = input("Enter End Date - Year: ")
+            if((tempDay.isnumeric() and (tempMonth.isnumeric() and tempYear.isnumeric()))):
+              flagW = False
+              eDay = int(tempDay)
+              eMonth = int(tempMonth)
+              eYear = int(tempYear)
+            else:
+              print("Invalid Date - Repeat Inputs")
+          # End While
+          eDate = cx_Oracle.Date(eYear, eMonth, eDay)
+          crsr.execute("update Personal_Loan set end_date = :one where loan_id = :two", [eDate, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "7"):
+        try:
+          userInput = input("Enter the new Loan Purpose: ")
+          crsr.execute("update Personal_Loan set loan_purpose = :one where loan_id = :two", [userInput, l_ID])
+        except cx_Oracle.Error as error:
+          print(error)
+      elif(userInput == "0"):
+        editRepeat = False
+      else:
+        print("Error - Invalid Edit Field")
+    # End of Option 3 While Loop
+  elif(userInput != "0"):
+    print("Error - Invalid Loan Type")
+# END OF EDITLOAN
+
+def removeLoans(crsr): 
+  print("Types of Loans to Remove: ")
+  print("[1] - Mortgage")
+  print("[2] - Auto Loan")
+  print("[3] - Personal Loan")
+  print("[0] - Back")
+
+  userInput = input("Enter the number corresponding to desired action: ")
+  print("")
+
+  if(userInput == "1"):
+    userInput = input("Enter the loan ID: ")
+    try: 
+       crsr.execute("DELETE FROM Mortgage WHERE loan_id = :input", [userInput])
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "2"): 
+    userInput = input("Enter the loan ID: ")
+    try: 
+       crsr.execute("DELETE FROM Auto_Loan WHERE loan_id = :input", [userInput])
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput == "3"): 
+    userInput = input("Enter the loan ID: ")
+    try: 
+       crsr.execute("DELETE FROM Personal_Loan WHERE loan_id = :input", [userInput])
+    except cx_Oracle.Error as error:
+      print(error)
+  elif(userInput != "0"):
+    print("Error - Invalid Input")    
+#END OF REMOVELOANS
+
+Main() # MAIN FUNCTION SHOULD ALWAYS BE AT END OF CODE
+
+'''
+- When a customer applies for a loan, he/she must submit the proof of income. A staff will verify the income and either approve or deny the loan. 
+- You may assume that this verification process is done manually and not a part of the software system. 
+- Only after the loan is approved, the staff member will enter the information into the software system.
+- The software system is required to provide the staff with the following operations:
+  + add/edit/remove/search a customer
+  + browse the list of the customers
+  + add/edit/remove a loan for a customer
+  + browse/search for a loan
+- The software system is required to provide the customers with the following operations:
+  + a customer must be able to view his/her current loans
+- Technical requirements:
+  + The system must use an Oracle database.
+  + The system may have a Graphical User Interface.
+'''
