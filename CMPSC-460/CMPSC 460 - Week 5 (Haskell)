@@ -1,0 +1,92 @@
+module Main where
+
+testList = [x | x <- [-5..5], x /= 0]
+
+sq:: Int -> Int
+sq x = x * x
+
+pos:: Int -> Bool
+pos x = x > 0
+
+-- Template function with dynamic variable declaration
+mymap:: (a -> b) -> [a] -> [b]
+mymap func [] = []
+mymap func (x:xs) = func x : mymap func xs
+
+mem:: (Eq a) => a -> [a] -> Bool
+mem e [] = False
+mem e (x:xs)
+  | e == x = True
+  | otherwise = mem e xs
+
+
+qsort :: (Ord a) => [a] -> [a]
+qsort [] = []
+qsort (x:xs) = 
+  (qsort [y | y <- xs, y < x]) 
+  ++ [x] 
+  ++ (qsort [y | y <- xs, y >= x])
+
+-- User Defined Data Types
+type Node = Int
+type Edge = (Node, Node)
+type Graph = [Edge]
+type Path = [Node]
+
+neighbor:: Node -> Graph -> [Node]
+neighbor n g = [snd e| e <- g, fst e == n]
+
+detach:: Node -> Graph -> Graph
+detach n [] = []
+detach n g = [e | e <- g, fst e /= n, snd e /= n]
+
+findPath:: Node -> Node -> Graph -> Path
+findPath s d g
+  | s == d = [d] -- Return the destination if we have reached it
+--  | g == [] = [] -- Preventing errors for empty graphs
+  | neighbor s g == [] = [] -- Prevent errors from empty neighborhoods
+  | otherwise = s:(findPath (head(neighbor s g)) d (detach s g)) 
+
+g::Graph
+g = [(1,2),(1,3),(1,4),(2,3),(2,4),(3,4)]
+
+g2::Graph
+g2 = [(1,2),(1,3),(1,4),(2,1),(2,3),(2,4),(3,4),(4,1)]
+
+data BTree a = Empty | BNode a (BTree a) (BTree a)
+
+leaves :: BTree a -> [a]
+leaves Empty = []
+leaves (BNode value Empty Empty) = [value]
+leaves (BNode value left right) = leaves left ++ leaves right
+
+height:: BTree a -> Int
+height Empty = -1
+height (BNode value left right) = 1 + max (height left) (height right)
+
+main = do
+  {-print(mymap sq testList)
+  print(mymap pos testList)
+  print(mem 5 testList)
+  print(mem 6 testList)
+  print(mem 1.1 [1.1,2.2,3.3,4.4])
+  print(mem 1.2 [1.1,2.2,3.3,4.4])
+  print(mem "hello" ["goodbye","hi","hello","see you soon","howdy"])
+  print(mem "bye" ["goodbye","hi","hello","see you soon","howdy"])
+  print(qsort [5,1,3,2,4])
+  print(qsort ["d","e","a","c","b"])-}
+  print(neighbor 1 g)
+  print(neighbor 2 g)
+  print(neighbor 3 g)
+  print(neighbor 4 g)
+  print(detach 1 g)
+  print(findPath 1 4 g)
+  print(findPath 2 2 g)
+  print(findPath 4 1 g)
+  print(findPath 1 4 g2)
+  print(findPath 2 2 g2)
+  print(findPath 4 1 g2)
+  print(leaves (BNode 3 (BNode 2 Empty Empty) Empty))
+  print(leaves (BNode 3 (BNode 2 Empty Empty) (BNode 4 Empty Empty)))
+  print(height (BNode 3 (BNode 2 Empty Empty) Empty))
+  print(height (BNode 3 (BNode 2 Empty Empty) (BNode 4 Empty Empty)))
