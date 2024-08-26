@@ -1,0 +1,40 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+   int hourlyWage;
+   int workHoursPerWeek;
+   int workWeeksPerYear;
+   const int monthsPerYear = 12;     // FIXME: Declare as const and use standard naming
+   int annualSalary;
+   int monthlySalary;
+
+   cout << "Enter hourly wage: " << endl;
+   cin >> hourlyWage;
+
+   // FIXME: Get user input values for workHoursPerWeek and workWeeksPerYear
+   cout << "Enter work hours per week: " << endl;
+   cin >> workHoursPerWeek;
+   cout << "Enter work weeks per year: " << endl;
+   cin >> workWeeksPerYear;
+
+   annualSalary = hourlyWage * workHoursPerWeek * workWeeksPerYear;
+   cout << "Annual Salary is: ";
+   cout << annualSalary << endl;
+   
+   // TODO: Calculate monthlySalary using annualSalary and the modified monthsPerYear const variable
+   monthlySalary = annualSalary / monthsPerYear;
+   cout << "Monthly salary is: ";
+   cout << monthlySalary << endl;
+
+   return 0;
+}
+
+/*
+zyDE 2.11.2: Calculate salary: Generalize a program with variables and input.
+
+The program below has been generalized to read a user's input value for hourlyWage.
+
+Run the program. Notice the user's input value of 10 is used. Modify that input value, and run again.
+Generalize the program to get user input values for workHoursPerWeek and workWeeksPerYear (change those variables' initializations to 0). Run the program.
+monthsPerYear will never change, so declare that variable as const. Use the standard for naming constant variables. Ex: const int MAX_LENGTH = 99. Run the program.
