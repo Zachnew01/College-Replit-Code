@@ -1,0 +1,26 @@
+#| -=- CMPSC 460 - Week 4 Notes -=- |#
+
+#| Monday, 1/29/24 |#
+
+; Currying - Add example
+(define (add x y) (+ x y))
+
+(display (add 5 7))
+(newline)
+
+(define (plus x) (lambda(y)(+ x y)) )
+
+(display ((plus 5) 7))
+(newline)
+
+(display (map (plus 5) '(1 2 3 4 5)))
+(newline)
+
+; Function that takes a parameter and returns a parameter:
+(define (foo func x) 
+  (lambda(y) (func x y) ) 
+)
+
+(display ((foo add 5) 7))
+(newline)
+(display (lambda (x) ((lambda (y) (*yy)(+ x 1))))(+ 2 1)))
