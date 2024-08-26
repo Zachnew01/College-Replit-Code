@@ -1,0 +1,74 @@
+module Main where
+
+evens = [2,4,6,8,10]
+odds = [1,3,5,7,9]
+list1 = [1,2..20]
+list2 = [1,3..19]
+list3 = 1:2:[3,4,5] -- Can use : to concatenate
+list4 = [2*x | x <- [1..10]] -- Set definition/generation
+
+mylength:: [Int] -> Int
+mylength [] = 0
+mylength (x:xs) = 1 + mylength xs
+
+mySum:: [Int] -> Int
+mySum [] = 0
+mySum (x:xs) = x + mySum xs
+
+myreverse:: [Int] -> [Int]
+myreverse [] = []
+myreverse (x:xs) = myreverse xs ++ [x]
+
+mymin:: Int -> Int -> Int
+mymin x y 
+  | x <=y = x       -- If <cond> then <code>
+  | otherwise = y   -- Else (otherwise) <code>
+
+mymin2:: Int -> Int -> Int -> Int
+mymin2 x y z = mymin x (mymin x y)
+
+mymin3:: Int -> Int -> Int -> Int
+mymin3 x y z 
+ | x <= y && x <= z = x
+ | y <= x && y <= z = y
+ | otherwise = z
+
+add:: Int -> Int -> Int
+add x y = x + y
+
+sq:: Int -> Int
+sq x = x * x
+
+mymap:: (Int -> Int) -> [Int] -> [Int]
+mymap func [] = []
+mymap func (x:xs) = func x : mymap func xs
+
+main = do
+  -- putStrLn "Hello, World!"
+  
+  {-print(evens)
+  print(odds)
+  print(evens ++ odds) -- appends/concat lists: ++
+  print(mylength evens)
+  print(mySum odds)
+  print(myreverse odds) -}
+  
+  {-print(list1)
+  print(head list1)
+  print(tail list1)
+  print(list2)
+  print(list3)
+  print(list4)-}
+  
+  {- print(mymin 5 6)
+  print(mymin 10 6)
+  print(mymin2 1 2 3)
+  print(mymin2 4 2 3)
+  print(mymin2 4 5 3)
+  print(mymin3 1 2 3)
+  print(mymin3 4 2 3)
+  print(mymin3 4 5 3) -
+
+  print(map (add 5) [1..10])
+  print(mymap (add 5) [1..10])
+  print(mymap sq [1..10])
