@@ -1,0 +1,1058 @@
+// Nathaniel Luffey and Zachary Newman - Project #3.cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Global Constants
+const bool TEST_DESTRUCTORS = false; // Allows cout functions in destructors if true
+const bool CLEAR_CONSOLE = false; // Clears the console after every interation of the loop
+
+void clearConsole()
+{
+  if (CLEAR_CONSOLE)
+  {
+    system("clear");
+  }
+}
+
+class Person // Parent Class
+{
+  private:
+    static int numPersons;
+  protected: //Protected Member Varaibles
+    string name; 
+    long ID;
+    string occupation;
+
+  public:
+    Person() //Default Constructor
+    {
+      name = " ";
+      ID = 0;
+      occupation = " ";
+      numPersons += 2;
+    }
+    Person(string pName, long pID, string pO) //Constructor w/ Variables
+    {
+      name = pName;
+      ID = pID;
+      occupation = pO;
+      numPersons += 2;
+    }
+    // Setter Functions - Person
+    void setName(string input)
+    {
+      name = input;
+    }
+    void setID(long input)
+    {
+      ID = input;
+    }
+    void setOccupation(string input)
+    {
+      occupation = input;
+    }
+    // Getter Functions - Person
+    string getName()
+    {
+      return name;
+    }
+    long getID()
+    {
+      return ID;
+    }
+    string getOccupation()
+    {
+      return occupation;
+    }
+    static int getNumPersons()
+    {
+      return numPersons;
+    }
+    virtual void addCourse()
+    {
+      cout << "Error. Virtual function was called." << endl;
+    }
+    virtual void removeCourse()
+    {
+      cout << "Error. Virtual function was called." << endl;
+    }
+  
+    ~Person() //Destructor
+    {
+      if (TEST_DESTRUCTORS) {
+      cout << "Deleting person with name " << name << ".\n";
+      }
+      name = " ";
+      ID = 0;
+      occupation = " ";
+      numPersons--;
+    }
+};
+
+class Course // Course (Class) Class
+{
+  // Private Member Variables - Course
+  string courseName;
+  string instructorName;
+  double grade;
+  int semester;
+  string courseDetail;
+  double credit;
+
+  public:
+  // Public Member Functions - Course
+    Course()  // Default Constructor
+    {
+      courseName = "";
+      instructorName = "";
+      grade = 0.0;
+      semester = 0;
+      courseDetail = "";
+      credit = 0.0;
+    }
+    Course(string cName, string instName, double grd, int smst, string cDetail, double crd)
+    {  // Constructor w/ variables
+      courseName = cName;
+      instructorName = instName;
+      grade = grd;
+      semester = smst;
+      courseDetail = cDetail;
+      credit = crd;
+    }
+  // Setter Functions - Course
+  void setCourseName(string input)
+  {
+    courseName = input;
+  }
+  void setInstructName(string input)
+  {
+    instructorName = input;
+  }
+  void setGrade(double input) 
+  {
+    grade = input;
+  }
+  void setSemester(int input) 
+  {
+    semester = input;
+  }
+  void setCourseDetail(string input)
+  {
+    courseDetail = input;
+  }
+  void setCredit(double input)
+  {  
+    credit = input;
+  }
+  // Getter Functions - Course
+  string getCourseName() const 
+  {
+    return courseName;
+  }
+  string getInstructName() const 
+  {
+    return instructorName;
+  }
+  double getGrade() const 
+  {
+    return grade;
+  }
+  int getSemester() const 
+  {
+    return semester;
+  }
+  string getCourseDetail() const 
+  {
+    return courseDetail;
+  }
+  double getCredit() const 
+  {
+    return credit;
+  }
+  ~Course() // Destructor Function - Course
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting course with name " << courseName << ".\n";
+    }
+    courseName = "";
+    instructorName = "";
+    grade = 0.0;
+    semester = 0;
+    courseDetail = "";
+    credit = 0.0;
+  }
+
+};
+
+class Book // Book Class
+{
+  // Private Member Variables - Book
+  string bookName;
+  string authorFirstName;
+  string authorLastName;
+  int copyNum;
+  string reserveDate;
+  string returnDate;
+
+  public:
+  // Public Member Functions - Book
+  Book()  // Default Constructor Function
+  {
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "00/00/0000";
+    returnDate = "00/00/0000";
+  }
+  Book(string bName, string authFname, string authLname, int cNum, string reserveD, string returnD)
+  {  // Constructor w/ variables
+    bookName = bName;
+    authorFirstName = authFname;
+    authorLastName = authLname;
+    copyNum = cNum;
+    reserveDate = reserveD;
+    returnDate = returnD;
+  }
+  // Setter Functions - Course
+  void setBookName(string input) 
+  {
+    bookName = input;
+  }
+  void setAuthorFirst(string input) 
+  {
+    authorFirstName = input;
+  }
+  void setAuthorLast(string input) 
+  {
+    authorLastName = input;
+  }
+  void setCopyNum(int input) 
+  {
+    copyNum = input;
+  }
+  void setReserveDate(string input) 
+  {
+    reserveDate = input;
+  }
+  void setReturnDate(string input) 
+  {
+    returnDate = input;
+  }
+  // Getter Functions - Course
+  string getBookName() const 
+  {
+    return bookName;
+  }
+  string getAuthorFirst() const 
+  {
+    return authorFirstName;
+  }
+  string getAuthorLast() const 
+  {
+    return authorLastName;
+  }
+  int getCopyNum() const 
+  {
+    return copyNum;
+  }
+  string getReserveDate() const 
+  {
+    return reserveDate;
+  }
+  string getReturnDate() const 
+  {
+    return returnDate;
+  }
+  ~Book() // Destructor Function - Book
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting book with name " << bookName << ".\n";
+    }
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "";
+    returnDate = "";
+  }
+};
+
+class Instructor : public Person // Instructor Class
+{
+private:
+  string department;
+  vector<Course> courses;
+public:
+  // Default Constructor
+  Instructor()
+  {
+    occupation = "Instructor";
+    department = "";
+    courses.clear();
+  }
+  // Constructor w/ Parameters
+  Instructor(string iName, long iID, string iDepartment)
+  {
+    name = iName;
+    ID = iID;
+    occupation = "Instructor";
+    department = iDepartment;
+    courses.clear();
+  }
+  // Setter Function - Instructor
+  void setDepartment(string input)
+  {
+    department = input;
+  }
+  // Getter Function - Instructor
+  string getDepartment()
+  {
+    return department;
+  }
+  void addCourse() // Adds a course to the courses vector
+  {
+  // Variable Declarations
+    string courseName;
+    string courseDetail;
+    Course tempCourse;
+    // User Input
+    cout << "Input the name of the course: ";
+    getline (cin >> ws,courseName);
+    cout << "Input the details of the course: ";
+    getline (cin >> ws,courseDetail);
+    // Course Data Input
+    tempCourse.setCourseName(courseName);
+    tempCourse.setInstructName(name);
+    tempCourse.setGrade(0);
+    tempCourse.setSemester(0);
+    tempCourse.setCourseDetail(courseDetail);
+    tempCourse.setCredit(0);
+    courses.push_back(tempCourse);
+  }
+  void removeCourse() // Removes a course from the courses vector
+  {
+    // Variable Declarations
+    int courseNum;
+    // if Statement to check if courses is empty, otherwise run function
+    if (courses.empty())
+    {
+      cout << "Instructor " << name << " has no courses." << endl;
+    }
+    else {
+      // Display of all the courses in the vector to choose from
+      cout << "Current courses for " << name << ": \n";
+      for (int i = 0; i < courses.size(); i++)
+      {
+        cout << (i + 1) << " - " << courses[i].getCourseName() << endl;
+      }
+      // User Input
+      cout << "Input the number of the Course you would like to remove: ";
+      cin >> courseNum;
+      courseNum -= 1;
+      // Course Data Reset/Removal
+      courses.erase(courses.begin() + courseNum);
+    }
+  }
+  void displayCourseInfo() // Displays a course from the courses vector
+  {
+    // Variable Declarations
+    int courseNum;
+    // if Statement to check if courses is empty, otherwise run function
+    if (courses.empty())
+    {
+      cout << "Instructor " << name << " has no courses." << endl;
+    }
+    else {
+      // Display of all the courses in the vector to choose from
+      cout << "Current courses for " << name << ": \n";
+      for (int i = 0; i < courses.size(); i++)
+      {
+        cout << (i + 1) << " - " << courses[i].getCourseName() << endl;
+      }
+      // User Input
+      cout << "Input the number of the Course you would like to display: ";
+      cin >> courseNum;
+      courseNum -= 1;
+      // Formatted Course Object Data Display
+      cout << "Instructor Name: " << name << endl;
+      cout << "Course Name: " << courses[courseNum].getCourseName() << endl;
+      cout << "Course Details: " << courses[courseNum].getCourseDetail() << endl;
+    }
+  }
+  // Destructor
+  ~Instructor()
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting instructor with name " << name << ".\n";
+      }
+    department = "";
+  }
+};
+
+class Student : public Person // Student Class
+{
+  double gpa;
+  int semester;
+  vector<Course> courses;
+  vector<Book> books;  
+public:
+  // Default Constructor
+  Student()
+  {
+    gpa = 4.0;
+    semester = 0;
+    occupation = "Student";
+  }
+  // Constructor w/ Parameters
+  Student(double gp, string stdntNm, double stdntD, int smstr)
+  {
+    gpa = gp;
+    name = stdntNm;
+    ID = stdntD;
+    semester = smstr;
+    occupation = "Student";
+  }
+  // Setter Functions - Student
+  void setGPA(double input)
+  {
+    gpa = input;
+  }
+  void setSemester(int input)
+  {
+    semester = input;
+  }
+  // Getter Functions - Student
+  double getGPA() const 
+  {
+    return gpa;
+  }
+  int getSemester() const 
+  {
+    return semester;
+  } 
+  void addCourse()  // Adds a course to Student
+  {
+    // Variable Declarations
+    int semesterNum;
+    string courseName;
+    string instructorName;
+    double grade;
+    string courseDetail;
+    double credit;
+    Course tempCourse;
+    // User Input
+    cout << "Input the semester of the course to add: ";
+    cin >> semesterNum;
+    cout << "Input the name of the course: ";
+    getline (cin >> ws,courseName);
+    cout << "Input the instructor's name: ";
+    getline (cin >> ws,instructorName);
+    cout << "Input the current grade for the course: ";
+    cin >> grade;
+    cout << "Input the details of the course: ";
+    getline (cin >> ws,courseDetail);
+    cout << "Input the credit gained from the course: ";
+    cin >> credit;
+    // Course Data Input
+    tempCourse.setCourseName(courseName);
+    tempCourse.setInstructName(instructorName);
+    tempCourse.setGrade(grade);
+    tempCourse.setSemester(semesterNum);
+    tempCourse.setCourseDetail(courseDetail);
+    tempCourse.setCredit(credit);
+    courses.push_back(tempCourse);
+  }
+  void removeCourse() // Removes a course from Student
+  {
+    // Variable Declarations
+    int courseNum;
+    // if Statement to check if courses is empty, otherwise run function
+    if (courses.empty())
+    {
+      cout << "Student " << name << " has no courses." << endl;
+    }
+    else {
+      // Display of all the courses in the vector to choose from
+      cout << "Current courses for " << name << ": \n";
+      for (int i = 0; i < courses.size(); i++)
+      {
+        cout << (i + 1) << " - " << courses[i].getCourseName();
+        cout << " - Semester: " << courses[i].getSemester() << endl;
+      }
+      // User Input
+      cout << "Input the course you would like to remove: ";
+      cin >> courseNum;
+      courseNum -= 1;
+      // Course Data Reset/Removal
+      courses.erase(courses.begin() + courseNum);
+      }
+  }  
+  void borrowBook() // Adds a book to Student
+  {
+    // Variable Declarations
+    int bookNum;
+    string bookName;
+    string authorFirstName;
+    string authorLastName;
+    int copyNum;
+    string reserveDate;
+    string returnDate;
+    Book tempBook;
+    // User Input
+    cout << "Input the title of the book: ";
+    getline (cin >> ws,bookName);
+    cout << "Input the author's first name: ";
+    cin >> authorFirstName;
+    cout << "Input the author's last name: ";
+    cin >> authorLastName;
+    cout << "Input the number of copies: ";
+    cin >> copyNum;
+    cout << "Input the date the book was reserved: ";
+    cin >> reserveDate;
+    cout << "Input the book's return date: ";
+    cin >> returnDate;
+    // Book Data Input
+    tempBook.setBookName(bookName);
+    tempBook.setAuthorFirst(authorFirstName);
+    tempBook.setAuthorLast(authorLastName);
+    tempBook.setCopyNum(copyNum);
+    tempBook.setReserveDate(reserveDate);
+    tempBook.setReturnDate(returnDate);
+    books.push_back(tempBook);
+  }
+  void returnBook() // Removes a book from Student
+  {
+    // Variable Declarations
+    int bookNum;
+    // if Statement to check if books is empty, otherwise run function
+    if (books.empty())
+    {
+      cout << "Student " << name << " has no books." << endl;
+    }
+    else {
+      // Display of all the books in the vector to choose from
+      cout << "Current books for " << name << ": \n";
+      for (int i = 0; i < books.size(); i++)
+      {
+        cout << (i + 1) << " - " << books[i].getBookName() << endl;
+      }
+      // User Input
+      cout << "Input the book you would like to return: ";
+      cin >> bookNum;
+      bookNum -= 1;
+      // Book Data Reset/Removal
+      books.erase(books.begin() + bookNum);
+      }
+  }
+  void displayBook() // Displays the information of a book in Student
+  {
+    // Variable Declarations
+    int bookNum;
+    // if Statement to check if books is empty, otherwise run function
+    if (books.empty())
+    {
+      cout << "Student " << name << " has no books." << endl;
+    }
+    else {
+      // Display of all the books in the vector to choose from
+      cout << "Current books for " << name << ": \n";
+      for (int i = 0; i < books.size(); i++)
+      {
+        cout << (i + 1) << " - " << books[i].getBookName() << endl;
+      }
+      // User Input
+      cout << "Input the book number to display: ";
+      cin >> bookNum;
+      bookNum -= 1;
+      cout << endl;
+      // Formatted Book Object Data Display
+      cout << "Book Title: " << books[bookNum].getBookName() << endl;
+      cout << "Author Name: " << books[bookNum].getAuthorLast();
+      cout << ", " << books[bookNum].getAuthorFirst() << endl;
+      cout << "Number of Copies: " << books[bookNum].getCopyNum() << endl;
+      cout << "Reserve Date: " << books[bookNum].getReserveDate() << endl;
+      cout << "Return Date: " << books[bookNum].getReturnDate() << endl;
+      }
+  }
+  void displayStudentRecord() // Displays the information of the Student and the courses
+  {
+    cout << " -|- Student Record -|-  " << endl;
+    cout << "Student Name: " << name << " - Student ID: " << ID << endl;
+    cout << "Student GPA: " << gpa << " - Current Semester: " << semester << endl;
+    cout << "\n - Current Semester Courses - " << endl;
+    for (int i = 0; i < courses.size(); i++) // Loops through courses in the current semester
+      {
+        // If statement validates if course exist (not default)
+        if (courses[i].getSemester() == semester)
+        { 
+          cout << "Course #" << i + 1 << ":" << endl;
+          cout << "   Course Name: " << courses[i].getCourseName() << endl;
+          cout << "   Course Instructor: " << courses[i].getInstructName()<< endl;
+          cout << "   Course Grade: " << courses[i].getGrade() << "%";
+          cout << " - Credits Earned: " << courses[i].getCredit() << endl;
+          cout << "   Course Details: " << courses[i].getCourseDetail() << endl;
+        }
+      }
+    cout << "\n - Previous Semester Courses - " << endl;
+    // Loops through all courses and shows the information of the courses from previous semesters.
+    for (int i = 0; i < courses.size(); i++)
+    {
+        // If statement validates if course exist (not default)
+        if (courses[i].getSemester() < semester)
+        {
+          cout << "Course #" << i + 1 << ":" << endl;
+          cout << "   Course Name: " << courses[i].getCourseName() << endl;
+          cout << "   Course Instructor: " << courses[i].getInstructName()<< endl;
+          cout << "   Course Grade: " << courses[i].getGrade() << "%";
+          cout << " - Credits Earned: " << courses[i].getCredit() << endl;
+          cout << "   Course Details: " << courses[i].getCourseDetail() << endl;
+        }
+    }
+    cout << " - End of Student Record - " << endl;
+  } // End of displayStudentRecord
+  ~Student()
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting student record for " << name << "." << endl;
+    }
+    gpa = 0;
+    name = " ";
+    ID = 0;
+    semester = 0;
+  }
+};
+
+int studentVectorDisplay(vector<Student> students) {
+  int studentNum;
+  // if Statement to check if students is empty
+  // Otherwise, display students and let choose
+  if (students.empty())
+  {
+    cout << "There are no Students." << endl;
+    return -1;
+  }
+  else {
+    // Display of all the students in the vector to choose from
+    cout << "Current Students:\n";
+    for (int i = 0; i < students.size(); i++)
+    {
+      cout << (i + 1) << " - " << students[i].getName() << endl;
+    }
+    // User Input
+    cout << "Input the number of the Students to use: ";
+    cin >> studentNum;
+    studentNum -= 1;
+    cout << endl;
+    }
+  return studentNum;
+}
+
+int main()  // Main Function
+{
+  vector<Student> students;
+  vector<Instructor> instructors;
+  int input;
+  // Main Program Loop for User Input
+  do{ 
+    cout << " - Student and Instructor Management Systems -" << endl;
+    cout << " 1 - Access Student Management System" << endl;
+    cout << " 2 - Access Instructor Management System" << endl;
+    cout << " 3 - Get Number of Persons" << endl;
+    cout << " 0 - Exit Program" << endl;
+    cout << "Input the number for the associated command: ";
+    cin >> input;
+    cout << endl;
+    clearConsole();
+    if (input == 1) {
+      // Student Management Loop for User Input
+      do {
+        cout << " - Student Management System - " << endl;
+        cout << " 1 - Add Student" << endl;
+        cout << " 2 - Remove Student" << endl;
+        cout << " 3 - Display Student Info" << endl;
+        cout << " 4 - Edit Student Info" << endl;
+        cout << " 5 - Add Course to a Student" << endl;
+        cout << " 6 - Remove Course from a Student" << endl;
+        cout << " 7 - Borrow Book to a Student" << endl;
+        cout << " 8 - Return Book from a Student" << endl;
+        cout << " 9 - Display Book of a Student" << endl;
+        cout << " 10 - Display Student Record" << endl;
+        cout << " 0 - Exit Current Menu" << endl;
+        cout << "Input the number for the associated command: ";
+        cin >> input;
+        cout << endl;
+        clearConsole();
+        // 1 - Add Student
+        if (input == 1) { 
+          // Variable Declarations
+          string tempName;
+          long tempID;
+          double tempGPA;
+          int tempSemester;
+          Student tempStudent;
+          // User Input
+          cout << "Enter Student Name: ";
+          getline (cin >> ws,tempName);
+          cout << "Enter Student ID: ";
+          cin >> tempID;
+          cout << "Enter Current Semester: ";
+          cin >> tempSemester;
+          cout << "Enter Current GPA: ";
+          cin >> tempGPA;
+          // Student Data Input
+          tempStudent.setName(tempName);
+          tempStudent.setID(tempID);
+          tempStudent.setSemester(tempSemester);
+          tempStudent.setGPA(tempGPA);
+          students.push_back(tempStudent);
+          cout << endl;
+        }
+        // 2 - Remove Student
+        else if (input == 2) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to remove
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {
+            // Student Data Reset/Removal
+            cout << "Student " << students[studentNum].getName() << " removed.\n";
+            students.erase(students.begin() + studentNum);
+          }
+          cout << endl;
+        }
+        /// 3 - Display Student Info
+        else if (input == 3) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to display
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {
+            // Formatted Instructor Object Data Display
+            cout << "Student Name: ";
+            cout << students[studentNum].getName() << endl;
+            cout << "Student ID: ";
+            cout << students[studentNum].getID() << endl;
+            cout << "Student's Current Semester: ";
+            cout << students[studentNum].getSemester() << endl;
+            cout << "Student GPA: ";
+            cout << students[studentNum].getGPA() << endl;
+          }
+          cout << endl;
+        }
+        // 4 - Edit Student Info
+        else if (input == 4) { 
+          // Variable Declarations
+          string tempName;
+          long tempID;
+          double tempGPA;
+          int tempSemester;
+          int studentNum;
+          // Choose student to edit
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {
+            // Student Data User Input
+            cout << "Enter Student Name: ";
+            getline (cin >> ws,tempName);
+            cout << "Enter Student ID: ";
+            cin >> tempID;
+            cout << "Enter Current Semester: ";
+            cin >> tempSemester;
+            cout << "Enter Current GPA: ";
+            cin >> tempGPA;
+            // Student Data Editing
+            students[studentNum].setName(tempName);
+            students[studentNum].setID(tempID);
+            students[studentNum].setSemester(tempSemester);
+            students[studentNum].setGPA(tempGPA);
+          }
+          cout << endl;
+        }
+        // 5 - Add Course to a Student
+        else if (input == 5) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to add course
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {
+            Person *tempPerson  = &students[studentNum];
+            tempPerson->addCourse();
+          }
+          cout << endl;
+        }
+        // 6 - Remove Course from a Student
+        else if (input == 6) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to remove course
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {
+            Person *tempPerson = &students[studentNum];
+            tempPerson->removeCourse();
+          }
+          cout << endl;
+        }
+        // 7 - Borrow Book to a Student
+        else if (input == 7) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to borrow book
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {students[studentNum].borrowBook();}
+          cout << endl;
+        }
+        // 8 - Return Book from a Student
+        else if (input == 8) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to remove book
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {students[studentNum].returnBook();}
+          cout << endl;
+        }
+        // 9 - Display Book of a Student
+        else if (input == 9) { 
+          // Variable Declarations
+          int studentNum;
+          // Choose student to display book
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {students[studentNum].displayBook();}
+          cout << endl;
+        }
+        // 10 - Display Student Record
+        else if (input == 10) {
+          // Variable Declarations
+          int studentNum;
+          // Choose student to display student record
+          studentNum = studentVectorDisplay(students);
+          if (studentNum > -1) {students[studentNum].displayStudentRecord();}
+          cout << endl;
+        }
+        else if (input > 10 || input < 0) {
+          cout << "Invalid input." << endl;
+        }
+      } while (input != 0);
+      input = -1;
+    }
+    else if (input == 2) {
+      // Instructor Management Loop for User Input
+      do {
+        cout << " - Instructor Management System - " << endl;
+        cout << " 1 - Add Instructor" << endl;
+        cout << " 2 - Remove Instructor" << endl;
+        cout << " 3 - Display Instructor Info" << endl;
+        cout << " 4 - Edit Instructor Info" << endl;
+        cout << " 5 - Add Course to an Instructor" << endl;
+        cout << " 6 - Remove Course from an Instructor" << endl;
+        cout << " 7 - Display Courses of an Instructor" << endl;
+        cout << " 0 - Exit Current Menu" << endl;
+        cout << "Input the number for the associated command: ";
+        cin >> input;
+        cout << endl;
+        clearConsole();
+        // 1- Add Instructor
+        if (input == 1) {
+          // Variable Declarations
+          string tempName;
+          long tempID;
+          string tempDepartment;
+          Instructor tempInstructor;
+          // User Input
+          cout << "Enter Instructor Name: ";
+          getline (cin >> ws,tempName);
+          cout << "Enter Instructor ID: ";
+          cin >> tempID;
+          cout << "Enter Instructor Department: ";
+          getline (cin >> ws,tempDepartment);
+          // Instructor Data Input
+          tempInstructor.setName(tempName);
+          tempInstructor.setID(tempID);
+          tempInstructor.setDepartment(tempDepartment);
+          instructors.push_back(tempInstructor);
+          cout << endl;
+        }
+        // 2 - Remove Instructor
+        else if (input == 2) {
+          // Variable Declarations
+          int instructNum;
+          // if Statement to check if instructors is empty, otherwise run command
+          if (instructors.empty())
+          {
+            cout << "There are no Instructors." << endl;
+          }
+          else {
+            // Display of all the instructors in the vector to choose from
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            // User Input
+            cout << "Input the number of the Instructor to remove: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            cout << endl;
+            // Instructor Data Reset/Removal
+            instructors.erase(instructors.begin() + instructNum);
+          }
+          cout << endl;
+        }
+        // 3 - Display Instructor Info
+        else if (input == 3) {
+          // Variable Declarations
+          int instructNum;
+          // if Statement to check if instructors is empty, otherwise run function
+          if (instructors.empty())
+          {
+            cout << "There are no instructors." << endl;
+          }
+          else {
+            // Display of all the Instructors in the vector to choose from
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            // User Input
+            cout << "Input the number of the Instructor to display: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            cout << endl;
+            // Formatted Instructor Object Data Display
+            cout << "Instructor Name: ";
+            cout << instructors[instructNum].getName() << endl;
+            cout << "Department Name: ";
+            cout << instructors[instructNum].getDepartment() << endl;
+            cout << "ID Number: ";
+            cout << instructors[instructNum].getID() << endl;
+            cout << endl;
+          }
+        }
+        // 4 - Edit Instructor Info
+        else if (input == 4) {
+          // Variable Declarations
+          int instructNum;
+          string tempName;
+          long tempID;
+          string tempDepartment;
+          // if Statement to check if instructors is empty, otherwise run command
+          if (instructors.empty())
+          {
+            cout << "There are no Instructors." << endl;
+          }
+          else {
+            // Display of all the instructors in the vector to choose from
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            // User Input
+            cout << "Input the number of the Instructor to edit: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            // Instructor Data Editing/Input
+            cout << "Enter Instructor Name: ";
+            getline (cin >> ws,tempName);
+            cout << "Enter Instructor ID: ";
+            cin >> tempID;
+            cout << "Enter Instructor Department: ";
+            getline (cin >> ws,tempDepartment);
+            instructors[instructNum].setName(tempName);
+            instructors[instructNum].setID(tempID);
+            instructors[instructNum].setDepartment(tempDepartment);
+            cout << endl;
+          }
+        }
+        // 5 - Add Course to an Instructor
+        else if (input == 5) {
+          // Variable Declaration
+          int instructNum;
+          // if Statement to check if instructors is empty, otherwise run command
+          if (instructors.empty())
+          {
+            cout << "There are no Instructors." << endl;
+          }
+          else {
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            cout << "Input the number of the Instructor to add a Course to: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            cout << endl;
+            // instructors[instructNum].addCourse();
+            Person *tempPerson = &instructors[instructNum];
+            tempPerson->addCourse();
+            cout << endl;
+          }
+        }
+        // 6 - Remove Course from an Instructor
+        else if (input == 6) {
+          // Variable Declaration
+          int instructNum;
+          // if Statement to check if instructors is empty, otherwise run command
+          if (instructors.empty())
+          {
+            cout << "There are no Instructors." << endl;
+          }
+          else {
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            cout << "Input the number of the Instructor to remove a Course from: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            cout << endl;
+            // instructors[instructNum].removeCourse();
+            Person *tempPerson = &instructors[instructNum];
+            tempPerson->removeCourse();     
+            cout << endl;
+          }
+        }
+        // 7 - Display Courses of an Instructor
+        else if (input == 7) {
+          // Variable Declaration 
+          int instructNum;
+          // if Statement to check if instructors is empty, otherwise run command
+          if (instructors.empty())
+          {
+            cout << "There are no Instructors." << endl;
+          }
+          else {
+            cout << "Current Instructors: \n";
+            for (int i = 0; i < instructors.size(); i++)
+            {
+              cout << (i + 1) << " - " << instructors[i].getName() << endl;
+            }
+            cout << "Input the number of the Instructor to display a course of: ";
+            cin >> instructNum;
+            instructNum -= 1;
+            cout << endl;
+            instructors[instructNum].displayCourseInfo();
+            cout << endl;
+          }
+        }
+        else if (input > 7 || input < 0) {
+          cout << "Invalid input." << endl;
+        }
+      } while (input != 0);
+      input = -1;
+    }
+    else if (input == 3) {
+      cout << "Number of Persons: " << students[0].getNumPersons() << endl << endl;
+    }
+    else if (input > 3 || input < -1) {
+      cout << "Invalid input." << endl;
+    }
+  } while (input != 0);
+  
+  return 0;
+}
+
+int Person::numPersons = 0; // Static Variable "numPersons"
