@@ -1,0 +1,151 @@
+import random 
+cardType = 0
+result = 0
+outputStr = ''
+while(1):
+  cardType = str(input("Event (1) or Support (2) card (3 to exit): "))
+  # Input Validation to allow for any input
+  if (cardType != "1" and cardType != "2" and cardType != "3"):
+    print("Invalid Input.")
+  # Event Cards
+  elif (int(cardType) == 1):
+    result = int(random.random() * 12)
+    if(result == 0): # Circe
+      print("\nCirce:")
+      print("Challenge Type: Charisma")
+      print("Success: Roll >= 8")
+      print(" - Result: Gain 2 Crew")
+      print("Partial Success: Roll >= 5")
+      print(" - Result: Gain 1 Crew")
+      print("Failure Result: Lose 1 Crew")
+    elif (result == 1): # Mutiny
+      print("\nCrew Mutiny:")
+      print("Challenge Type: Charisma")
+      print("Success: Roll >= 6")
+      print(" - Result: Gain 1 Crew")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 crew")
+    elif (result == 2): # Pirates
+      print("\nPirates:")
+      print("Challenge Type: Strength")
+      print("Success: Roll >= 7")
+      print(" - Result: Gain 1 Crew or 1 Support Card")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 Crew or 1 Support Card")
+    elif (result == 3): # Cyclops
+      print("\nCyclops:")
+      print("Challenge Type: Intelligence")
+      print("Success: Roll >= 8")
+      print(" - Result: Gain 1 Support Card")
+      print("Partial Success: Roll >= 5")
+      print(" - Result: Lose 1 Crew")
+      print("Failure Result: Lose 2 Crew or 1 Life")
+    elif (result == 4): # Laestrygonians
+      print("\nLaestrygonians:")
+      print("Challenge Type: Strength")
+      print("Success: Roll >= 7")
+      print(" - Result: Gain 1 Suport Card")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 Crew")
+    elif (result == 5): # Labyrinth
+      print("\nLabyrinth:")
+      print("Challenge Type: Intelligence")
+      print("Success: Roll >= 7")
+      print(" - Result: Gain 1 Crew")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 Crew")
+    elif (result == 6): # Lotus Eaters
+      print("\nLotus Eaters:")
+      print("Challenge Type: Charisma")
+      print("Success: Roll >= 9")
+      print(" - Result: Gain 2 Crew")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: Gain 1 Crew")
+      print("Failure Result: Lose 2 Crew")
+    elif (result == 7): # Treasure Map
+      print("\nTreasure Map:")
+      print("Challenge Type: Intelligence")
+      print("Success: Roll >= 6")
+      print(" - Result: Gain 1 Support Card")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 Support Card")
+    elif (result == 8): # Battle
+      print("\n1v1 Brawl:")
+      print("Challenge Type: Strength")
+      print("Success: Roll >= 9")
+      print("Result: Gain 1 Crew")
+      print("Partial Success: Roll >= 6")
+      print("Result: None")
+      print("Failure Result: Lose 1 Life")
+    elif (result == 9): # Traps
+      print("\nTrapped Area")
+      print("Challenge Type: Intelligence")
+      print("Success: Roll >= 8")
+      print(" - Result: None")
+      print("Partial Success: Roll >= 5")
+      print(" - Result: Lose 1 Crew")
+      print("Failure Result: Lose 1 Crew and 1 Life")
+    elif (result == 10):
+      print("\nVillage Raid")
+      print("Challenge Type: Strength")
+      print("Success: Roll >= 8")
+      print(" - Result: Gain 1 Suport Card and 1 Crew")
+      print("Partial Success: Roll >= 5")
+      print(" - Result: Gain 1 Support Card")
+      print("Failure Result: Lose 1 Crew or 1 Life")
+    elif (result == 11):
+      print("\nKing Aeolus")
+      print("Challenge Type: Charisma")
+      print("Success: Roll >= 7")
+      print(" - Result: Gain 1 Support Card")
+      print("Partial Success: Roll >= 4")
+      print(" - Result: None")
+      print("Failure Result: Lose 1 Support Card")
+  # Support Cards
+  elif(int(cardType) == 2):
+    result = int(random.random() * 12)
+    if(result == 0):
+      print("\nName: Bag of Winds")
+      print("Pay 1 AP : Change the wind direction and move in that direction")
+    elif(result == 1):
+      print("\nName: Posidon's Blessing")
+      print("Pay 3 AP : Choose the direction you move when you land on an ocean current tile")
+    elif(result == 2):
+      print("\nName: Athena's Blessing")
+      print("Pay 2 AP : Add +3 to any Intelligence Roll")
+    elif(result == 3):
+      print("\nName: Aphrodite's Blessing")
+      print("Pay 2 AP : Add +3 to any Charisma Roll")
+    elif(result == 4):
+      print("\nName: Ares' Blessing ")
+      print("Pay 2 AP : Add +3 to any Strength Roll")
+    elif(result == 5):
+      print("\nName: Zeus' Blessing")
+      print("Pay 2 AP : Add +1 or -1 to any Roll")
+    elif(result == 6):
+      print("\nName: Strong Wine")
+      print("Pay 2 AP : Add +2 to any Charisma or Intelligence Roll")
+    elif(result == 7):
+      print("\nName: Prophetic Vision")
+      print("Pay 1 AP : Look at the top card of the event deck; you may put that card to the bottom of the event deck")
+    elif(result == 8):
+      print("\nName: Aegis")
+      print("Pay 3 AP : Prevent the loss of 1 crew")
+    elif(result == 9):
+      print("\nName: Sturdy Oars")
+      print("Pay 1 AP : Move in any direction")
+    elif(result == 10):
+      print("\nName: Locked Box")
+      print("Pay 3 AP : Prevent the loss of 1 support card and gain 1 support card instead ")
+    elif(result == 11):
+      print("\nName: Hermes' Potion")
+      print("Pay 2 AP : Succeed in the Circe challenge without having to roll")
+  # End Program
+  elif (int(cardType) == 3):
+    exit("\nProgram Stopped")
+  print("")
