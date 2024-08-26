@@ -1,0 +1,76 @@
+//Zachary Newman
+
+#include <iostream>
+using namespace std;
+
+////// global constants
+const string CONSTANT = "I am a global constant";
+
+////// global variables
+string globalVariable = "I am a global variable";
+
+////// function declarations
+void displayGameboard();
+void displayStatusPanel();
+void displayTitle();
+
+////// main program
+int main()
+{
+  //// local variables
+  string playerMove = "I am a local variable"; 
+  // flag variable to control game loop
+  bool isGameOver = false; 
+  system("clear");
+  displayGameboard();
+
+  // main game loop
+
+  while (!isGameOver)
+  {
+    system("clear");
+    displayGameboard();
+    displayTitle();
+    displayStatusPanel();
+    cout << "Press a letter to move:\nw up\ta left\ts down\td right: ";
+    cin >> playerMove;
+    if (playerMove == "q")
+    {
+      isGameOver = true;
+    }
+    else if (playerMove == "d")
+    {
+      // etc.
+    }
+    else if (playerMove == "s")
+    {
+      // etc.
+    }
+    else if (playerMove == "a")
+    {	
+			// etc.
+    }
+    system("clear");
+    displayGameboard();
+  }// end of game loop
+  system("clear");
+  displayGameboard();
+	displayStatusPanel();
+	return 0;
+}// end of main function
+
+////// functions
+void displayGameboard()
+{
+	cout << "this is the body of a function named displayGameboard" << endl;
+}
+
+void displayStatusPanel()
+{
+	cout << "this is the body of a function named displayStatusPanel" << endl;
+}
+
+void displayTitle()
+{
+	cout << "this is the body of a function named displayTitle" << endl;
+}
