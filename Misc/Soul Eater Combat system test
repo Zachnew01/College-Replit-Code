@@ -1,0 +1,159 @@
+// Zachary Newman
+// Soul Eater Shibusen Combat program
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+// -=- Function Declarations -=-
+int CalculateHealth(int str, int will, int magic); // Function to calculate health
+int AttackToHit(int modStat); // Function to calculate the "to hit" roll
+int BlockChance(int reflex, int numBlocked); // Function to calculate the blocking chance
+int DodgeChance(int reflex, int dex, int numDodged); // Function to calculate the dodging chance
+
+// -=- Main -=-
+int main() 
+{
+// Combatant 1 stats
+int charOneStr = 0; // Physical Strength
+int charOneWill = 0; // Willpower
+int charOneMagic = 0; // Magic Capacity
+int charOneWeaponStr = 0; // Physical Strngth of Weapon
+int charOneDex = 0; // Dexterity
+int charOneAcu = 0; // Accuracy
+int charOneComp = 0; // Composure
+int charOneRef = 0; // Reflex
+int charOneExp = 0; // Experience
+int charOneHP = 0; // Health
+int charOneCurrentHP = 0; // Heakth minus damage taken
+int numBlockedOne = 0; // Number of blocked attacks 
+int numDodgedOne = 0; // Number of dodged attacks
+
+// Combatant 2 stats
+int charTwoStr = 0; // Physical Strength
+int charTwoWill = 0; // Willpower
+int charTwoMagic = 0; // Magic Capacity
+int charTwoWeaponStr = 0; // Physical Strngth of Weapon
+int charTwoDex = 0; // Dexterity
+int charTwoAcu = 0; // Accuracy
+int charTwoComp = 0; // Composure
+int charTwoRef = 0; // Reflex
+int charTwoExp = 0; // Experience
+int charTwoHP = 0; // Health
+int charTwoCurrentHP = 0; // Heakth minus damage taken
+int numBlockedTwo = 0; // Number of blocked attacks 
+int numDodgedTwo = 0; // Number of dodged attacks
+
+cout << "For any of the following values which is N/A, input 0." << endl << endl;
+//Obtain combatant 1 stats:
+cout << "Enter Character 1's Physical Strength stat: ";
+cin >> charOneStr;
+cout <<  "Enter Character 1's Willpower stat: ";
+cin >> charOneWill;
+cout << "Enter Character 1's Magic capacity stat: ";
+cin >> charOneMagic;
+/* Recent Stat inputs: */
+cout <<  "Enter the weapon of Character 1's Physical Strength stat: ";
+cin >> charOneWeaponStr;
+cout <<  "Enter Character 1's Dexterity stat: ";
+cin >> charOneDex;
+cout <<  "Enter Character 1's Accuracy stat: ";
+cin >> charOneAcu;
+cout <<  "Enter Character 1's Composure stat: ";
+cin >> charOneComp;
+cout <<  "Enter Character 1's Reflex stat: ";
+cin >> charOneRef;
+cout <<  "Enter Character 1's Experience stat: ";
+cin >> charOneExp;
+cout << endl;
+/* Health Input: */
+charOneHP = CalculateHealth(charOneStr, charOneWill, charOneMagic);
+charOneCurrentHP = charOneHP;
+cout << "Character 1's health: " << charOneHP << endl << endl;
+
+//Obtain combatant 2 stats:
+cout << "Enter Character 2's Physical Strength stat: ";
+cin >> charTwoStr;
+cout << "Enter Character 2's Willpower stat: ";
+cin >> charTwoWill;
+cout << "Enter Character 2's Magic capacity stat: ";
+cin >> charTwoMagic;
+/* Recent Stat inputs: */
+cout << "Enter the weapon of Character 2's Physical Strength stat: ";
+cin >> charTwoWeaponStr;
+cout << "Enter Character 2's Dexterity stat: ";
+cin >> charTwoDex;
+cout << "Enter Character 2's Accuracy stat: ";
+cin >> charTwoAcu;
+cout << "Enter Character 2's Composure stat: ";
+cin >> charTwoComp;
+cout << "Enter Character 2's Reflex stat: ";
+cin >> charTwoRef;
+cout << "Enter Character 2's Experience stat: ";
+cin >> charTwoExp;
+cout << endl;
+/* Health Input: */
+charTwoHP = CalculateHealth(charTwoStr, charTwoWill, charTwoMagic);
+charTwoCurrentHP = charTwoHP;
+cout << "Character 2's health: " << charTwoHP << endl << endl;
+}
+
+// -=- Functions -=-
+// Function to calculate health:
+int CalculateHealth (int str, int will, int magic)
+{
+  int numHealth = 0;
+  static int hpMultiplier = 5;
+
+  // Sets the health to 5 times the highest physical stat value
+  if (str >= will && str >= magic) {
+    numHealth = str * hpMultiplier;
+  }
+  else if (will > str && will > magic) {
+    numHealth = will * hpMultiplier;
+  }
+  else {
+    numHealth = magic * hpMultiplier;
+  }
+
+  return numHealth;
+}
+
+// Function to calculate the "to hit" roll:
+int AttackToHit (int modStat) 
+{
+  static int diceSize = 20;
+  int result = 0;
+  int diceRoll = 0;
+
+  diceRoll = (rand() % diceSize) + 1; // Determines the outcome of the dice
+  result = diceRoll + (modStat / 2); // Calculates the result
+  
+  return result;
+}
+
+// Function to calculate the blocking chance:
+int BlockChance (int reflex, int numBlocked)
+{
+  static int diceSize = 20;
+  int result = 0;
+  int diceRoll = 0;
+  
+  diceRoll = (rand() % diceSize) + 1; // Determines the outcome of the dice
+  result = diceRoll + int((reflex / 2.0) + 0.5) - (numBlocked * 2); // Calculates the result
+  
+  return result;
+}
+
+// Function to calculate the dodging chance:
+int DodgeChance (int reflex, int dex, int numDodged)
+{
+  static int diceSize = 10;
+  int result = 0;
+  int diceRoll = 0;
+
+  diceRoll = (rand() % diceSize) + 1; // Determines the outcome of the dice
+  result = diceRoll + int((reflex / 2.0) + 0.5) + int((dex / 2.0) + 0.5); // Calculates the result
+  result = int(( result / (numDodged + 1.0) ) + 0.5); // Lowers the result based on the number of previous consecutive dodges.
+
+  return result;
+}
