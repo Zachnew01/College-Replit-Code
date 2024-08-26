@@ -1,0 +1,140 @@
+module Main where
+
+import Data.Maybe (fromMaybe)
+
+-- -=- Question 1 - Map Datatype -=- --
+type KVpair a b = (a,b)
+type MyMap a b = [KVpair a b]
+
+-- Example of a Map initialization
+m::MyMap Int String
+m = [(1,"a"),(2,"b"),(3,"c")]
+
+mapSize:: MyMap a b -> Int
+mapSize [] = 0
+mapSize (x:xs) = 1 + (mapSize xs)
+
+insertPair:: (Eq a) => MyMap a b -> KVpair a b -> MyMap a b
+insertPair [] kv = [kv]
+insertPair (x:xs) kv
+  | (fst x == fst kv) = x:xs -- Prevents copies of keys
+  | otherwise = x:(insertPair xs kv)
+
+getValue:: (Eq a) => MyMap a b -> a -> Maybe b
+getValue [] k = Nothing
+getValue (x:xs) k
+  | (fst x == k) = Just (snd x)
+  | otherwise = getValue xs k
+
+removePair:: (Eq a) => MyMap a b -> a -> MyMap a b
+removePair [] k = []
+removePair (x:xs) k
+  | (fst x == k) = xs
+  | otherwise = x:(removePair xs k)
+
+
+-- -=- Question 2 - Directed Graph -=- --
+type Node = Int
+type Edge = (Node, Node)
+type Graph = [Edge]
+type Path = [Node]
+g :: Graph
+g = [ (1, 2), (1, 3), (2, 3), (2, 4), (3, 4) ]
+h :: Graph
+h = [ (1, 2), (1, 3), (2, 1), (3, 2), (4, 4) ]
+
+-- 2a:
+neighbors:: Node -> Graph -> [Node]
+neighbors n g = [snd e| e <- g, fst e == n]
+
+-- 2b:
+detach:: Node -> Graph -> Graph
+detach n [] = []
+detach n g = [e | e <- g, fst e /= n, snd e /= n]
+
+-- 2c:
+pathHelper:: Node -> Node -> Graph -> Path -> Path
+pathHelper s d g p
+  | s == d = (p++[d])
+  | neighbors s g == [] = []
+  | otherwise = pathHelper (head(neighbors s g)) d (detach s g) (p++[s])
+
+path:: Node -> Node -> Graph -> Path
+path s d g = pathHelper s d g []
+  {-| s == d = [d] -- Return the destination if we have reached it
+  | neighbors s g == [] = [] -- Prevent errors from empty neighborhoods
+  | otherwise = s:(path (head(neighbors s g)) d (detach s g))-}
+
+
+-- -=- Question 3 - Find All Paths -=- --
+
+-- Outputs whether the list includes a given element
+contains:: (Eq a) => a -> [a] -> Bool
+contains v [] = False
+contains v (x:xs)
+  | v == x = True
+  | otherwise = contains v xs
+
+-- Removes Duplicate paths from the path list (using contains)
+removeDuplicates:: (Eq a) => [a] -> [a]
+removeDuplicates [] = []
+removeDuplicates (x:xs)
+  | contains x xs = removeDuplicates xs
+  | otherwise = x:removeDuplicates xs
+
+-- Removes edges that were already processes by pathsHelper to find all paths from all children
+removeEdge:: Node -> Node -> Graph -> Graph
+removeEdge v w [] = []
+removeEdge v w g = [e | e <- g, fst e /= v || snd e /= w]
+
+-- Helper function for "paths" that uses the helper for the other "path" function
+pathsHelper:: Node -> Node -> Graph -> Path -> [Path]
+pathsHelper s d g p
+  | s == d = [[d]]
+  | neighbors s g == [] = []
+  | otherwise = [pathHelper (head(neighbors s g)) d (detach s g) (p++[s])] ++ pathsHelper (head(neighbors s g)) d (detach s g) (p++[s]) ++ pathsHelper s d (removeEdge s (head(neighbors s g)) g) p
+
+-- Primary function to find all paths
+paths:: Node -> Node -> Graph -> [Path]
+paths s d g = [p | p <- removeDuplicates(pathsHelper s d g []), p /= [], contains s p]
+
+
+main = do
+-- Question 1 test cases:
+  print("- Question 1 Test Cases -")
+  print(mapSize m)
+  print(mapSize [('a',1),('b',2),('c',3),('d',4),('e',5)])
+  print(mapSize [])
+  
+  print(insertPair m (4,"d"))
+  print(insertPair m (3,"E"))
+  print(insertPair m (4,"c"))
+
+  print(getValue m 1)
+  print(getValue m 3)
+  print(getValue m 5)
+  
+  print(removePair m 1)
+  print(removePair m 3)
+  print(removePair m 4)
+
+-- Question 2 test cases:
+  print("- Question 2 Test Cases -")
+  print(neighbors 2 g) -- [3, 4]
+  print(neighbors 4 g) -- []
+  print(neighbors 4 h) -- [4]
+  
+  print(detach 3 g) -- [(1, 2), (2, 4)]
+  print(detach 5 g) -- g
+  
+  print(path 2 2 g) -- [2]
+  print(path 3 2 g) -- []
+  print(path 1 4 g) -- [1, 2, 3, 4]
+
+-- Question 3 test cases:
+  print(paths 1 4 g)
+  print(paths 4 1 g)
+  print(paths 1 2 g)
+  print(paths 2 2 g)
+
+  print((\x y -> x+y) 5 7)
