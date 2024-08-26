@@ -1,0 +1,39 @@
+// YOUR NAME HERE
+// Works Cited
+// None
+
+#include <iostream>
+using namespace std;
+
+int main() 
+{
+  ///////////// variable declarations
+
+  int num1 = 0;
+  int num2 = 0;
+
+  /////////////  inputs
+  cout << "Enter an integer: ";
+  cin >> num1;
+  cout << "Enter another integer: ";
+  cin >> num2;
+
+  ///////////// processing
+
+  ///////////// output
+
+  if (num1 <= num2) 
+  { // num1 is smaller 
+    cout << num1 << endl;
+  }
+  else if (num2 <= num1)
+  { // num2 is smaller 
+    cout << num2 << endl;
+  }
+  else 
+  { // ???
+    cout << "how did I get here" << endl;
+  } 
+
+  return 0;
+}// end of main
