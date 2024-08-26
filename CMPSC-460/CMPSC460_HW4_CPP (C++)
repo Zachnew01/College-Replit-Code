@@ -1,0 +1,121 @@
+// Zachary Newman - ZTN5011
+#include <iostream>
+using namespace std;
+
+template <typename T> class MyArrayNode{
+  public:
+    T element;
+    MyArrayNode<T> *next;
+    
+    MyArrayNode(T ele){
+      element = ele;
+      next = NULL;
+    }
+}; // End of MyArrayNode
+
+
+template <typename T> class MyArray{
+  
+  private:
+    MyArrayNode<T> *head = NULL;
+  
+  public:
+    void add(T element){
+      if (head == NULL){
+        head = new MyArrayNode<T>(element);
+      }
+      else {
+        MyArrayNode<T> *tempHead = head;
+        while((*tempHead).next != NULL){
+          tempHead = (*tempHead).next;
+        }
+        (*tempHead).next = new MyArrayNode<T>(element);
+      }
+    } // End of add
+
+    void print(){
+      if (head == NULL){
+        cout << endl;
+      }
+      else{
+        MyArrayNode<T> *tempHead = head;
+        while(tempHead != NULL){
+          cout << (*tempHead).element << " ";
+          tempHead = (*tempHead).next;
+        }
+        cout << endl;
+      }
+    } // End of print
+
+    void sort(){
+      if(head == NULL){
+        // do nothing
+      }
+      else {
+        MyArrayNode<T> *toSort = head;
+        while((*toSort).next != NULL) { // For every element, find the smallest after it and swap them
+          MyArrayNode<T> *smallest = toSort;
+          MyArrayNode<T> *curr = (*toSort).next;
+          while(curr != NULL){ // Find smallest element
+            if(((*curr).element) < ((*smallest).element)){
+              smallest = curr;
+            }
+            curr = (*curr).next;
+          }
+          // Swap toSort and smallest
+          T temp = (*toSort).element;
+          (*toSort).element = (*smallest).element;
+          (*smallest).element = temp;
+          // Move to sort next element
+          toSort = (*toSort).next;
+        }
+      }
+    } // End of Sort
+
+}; // End of MyArray
+
+
+class Employee{ // Implementation of employee for testing
+  public:
+    string fullName;
+    string email;
+    int year;
+
+    Employee(){}
+    Employee(string fullName, string email,int year){
+      this->fullName = fullName;
+      this->email = email;
+      this->year = year;
+    }
+
+    bool operator< (const Employee& other){
+      return this->fullName < other.fullName;
+    } // end of <
+
+}; // end of Employee
+
+ostream& operator<<(ostream &out, const Employee& emp) {
+  return out << emp.fullName << ", " << emp.email << ", " << emp.year << endl;
+} // Employee cout conversion function
+
+int main() {
+  MyArray<int> arr;
+  arr.add(13);
+  arr.add(5);
+  arr.add(8);
+  arr.print();
+  arr.sort();
+  arr.print();
+
+  cout << endl;
+  
+  MyArray<Employee> emp;
+  emp.add(Employee("Leroy Gibbs", "ljb123@psu.edu", 2001));
+  emp.add(Employee("Donald Mallard", "dhm456@psu.edu", 2001));
+  emp.add(Employee("Caitlin Todd", "ckt525@psu.edu", 2002));
+  emp.add(Employee("Anthony DiNozzo", "atd707@psu.edu", 2002));
+  emp.add(Employee("Abigail Sciuto", "abs789@psu.edu", 2001));
+  emp.print();
+  emp.sort();
+  emp.print();
+}
