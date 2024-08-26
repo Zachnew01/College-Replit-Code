@@ -1,0 +1,181 @@
+#| -=- CMPSC 460 - Homework 1 -=- |#
+
+(newline) ; Just to make the output below look better
+
+#| Question 1 - Intersection |#
+
+(define (contains val lst) ; Detmines if the list lst contains the value val
+  (if (null? lst) #f
+      (if (= val (car lst)) #t
+          (contains val (cdr lst))
+      )
+  )
+)
+
+(define (intersection lst1 lst2)
+  (if (null? lst1) '()
+      (if (contains (car lst1) lst2)
+          (append (list (car lst1)) (intersection (cdr lst1) lst2)) ; If found, include
+          (intersection (cdr lst1) lst2) ; If not found, don't include
+      )
+  )
+)
+
+#| Question 2 - Difference |#
+
+  (define (difference lst1 lst2)
+    (if (null? lst1) '()
+        (if (contains (car lst1) lst2)
+            (difference (cdr lst1) lst2) ; If found, don't include
+            (append (list (car lst1)) (difference (cdr lst1) lst2)) ; If not found, include
+        )
+    )
+  )
+
+#| Question 3 - sum of squares |#
+
+  (define (sumSqr lst res)
+    (if (null? lst) res
+        (sumSqr (cdr lst) (+ res (* (car lst) (car lst))))
+    )
+  )
+
+#| Question 4 - Matrix Multiplication |#
+; Instructions: Run with (multMatrix <matrix1> <matrix2>), where each matrix is a 2-dimensional arrray. Example below (output displayed)
+
+(define (nextColumn matrix)
+  (if (null? matrix) '()
+      (append (list (cdr (car matrix))) (nextColumn (cdr matrix))) 
+      ; Remove the head from each nested list by only appending the tail
+  )
+)
+
+(define (firstColumn matrix)
+  (if (null? matrix) '()
+      (cons (car (car matrix)) (firstColumn (cdr matrix)))
+      ; Returns a list only containing the first column of the matrix
+  )
+)
+
+(define (sumProduct row col)
+  (if (null? row) 0
+      (+ (* (car row) (car col)) (sumProduct (cdr row) (cdr col)))
+      ; Returns the sum of products of the elements from one row to the elements of one column
+  )
+)
+
+(define (multRow row m2)
+  (if (null? (car m2)) '()
+    (append (list (sumProduct row (firstColumn m2))) (multRow row (nextColumn m2)))
+    ; Recursively finds the sum of products for matrix multiplication for a row
+  )
+)
+  
+(define (multMatrix m1 m2)
+  (if (null? m1) '()
+      (append (list (multRow (car m1) m2)) (multMatrix (cdr m1) m2))
+      ; Recursively finds each row
+  )
+)
+(display " -=- Matrix Multiplication Test Example -=-")
+(newline)
+(display "(multMatrix '((1 2 3) (4 5 6)) '((7 8) (9 10) (11 12))):")
+(newline)
+(display (multMatrix '((1 2 3) (4 5 6)) '((7 8) (9 10) (11 12))))
+(newline)
+(newline)
+
+#| Question 5 - Priority Queue |#
+
+; Function: insert an element to the priority queue
+(define (push pq x)
+  (if (null? pq) (list x)
+      (if (> (car x) (car (car pq))) ; Check if the new priority is greater than the current head of the list
+          (append (list x) pq) ;If new priority higher, append new at the front of the list
+          (append (list (car pq)) (push (cdr pq) x))
+      )
+  )
+) 
+
+; Function: remove the highest priority element
+(define (pop pq)
+  (if (null? pq) '()
+      (cdr pq)
+  )
+)
+
+; Function: extract the highest priority element without removing it from the queue
+(define (peek pq)
+  (if (null? pq) '()
+    (car pq)
+  )
+)
+
+; Function: get the highest priority
+; highest_priority is the main, hpHelper is the helper
+(define (hpHelper pq highest)
+  (if (null? pq) highest
+    (if (> (car (car pq)) highest) 
+        (hpHelper (cdr pq) (car (car pq))) ;If current is higher, continue with new highest
+        (hpHelper (cdr pq) highest) ; If not, continue with current highest
+    )
+  )
+)
+
+(define (highest_priority pq)
+  (hpHelper pq 0)
+)
+
+; Function: get the size of the queue.
+(define (size pq)
+  (if (null? pq) 0
+    (+ 1 (size (cdr pq)))
+  )
+)
+
+; Priority Queue Test Cases:
+(display "-=- Priority Queue Test Cases -=-")
+(newline)
+(newline)
+
+(define pq '((6 "i") (2 "have") (3 "a") (1 "dream")))
+(display "pq: ")
+(display pq)
+(newline)
+(newline)
+
+(display "(push pq '(7 \"Now\")): ")
+(newline)
+(display (push pq '(7 "Now")))
+(newline)
+(newline)
+
+(display "(push pq '(5 \"never\")): ")
+(newline)
+(display (push pq '(5 "never")))
+(newline)
+(newline)
+
+(display "(push pq '(1 \"again\")): ")
+(newline)
+(display (push pq '(1 "again")))
+(newline)
+(newline)
+
+(display "(pop pq): ")
+(display (pop pq))
+(newline)
+
+(display "(peek pq): ")
+(display (peek pq))
+(newline)
+
+(display "(highest_priority pq): ")
+(display (highest_priority pq))
+(newline)
+
+(display "(size pq): ")
+(display (size pq))
+(newline)
+
+; Feel free to write your own test cases using pq to test my code further. I hopefully accounted for all of the null priority queues effectively.
