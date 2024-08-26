@@ -1,0 +1,219 @@
+#Let f(x) = e^|x| 
+# Compare evenly spaced interpolation with Chebyshev interpolation by plotting degree n polynomial of both types on the interval [-1, 1], for n = 10 and n = 20
+# For evenly spaced interpolation, the left and right interpolation base points should be -1 and 1. 
+# By sampling at a 0.01 step size, create the empirical interpolation error for each type and plot a comparison. 
+
+import matplotlib.pyplot as plt
+import math
+
+def main():
+  degree1 = 10 # Constant Value for when n = 10
+  degree2 = 20 # Constant Value for when n = 20
+  # Simplifies Arithmetic for the degrees, only needed to use them once.
+  halfDegree1 = degree1 / 2
+  halfDegree2 = degree2 / 2
+  numPoints1 = degree1+1
+  numPoints2 = degree2+1
+
+  xC10 = [] # Points for degree 10 chebyshev polynomial
+  xL10 = [] # Points for degree 10 lagrange polynomial
+  tmpC = 0
+  tmpL = 0
+  for i in range(numPoints1):
+    tmpC = ((2 * (i + 1)) - 1) * math.pi
+    tmpC = tmpC / (numPoints1*2.0)
+    tmpC = math.cos(tmpC)
+    xC10.append(tmpC)
+    tmpL = ((i/halfDegree1) - 1.0)
+    tmpL = round(tmpL,1)
+    #print(tmpL)
+    xL10.append(tmpL)
+
+  #print(xC10)
+  #print(xL10)
+
+  xC20 = [] # Points for degree 20 chebyshev polynomial
+  xL20 = [] # Points for degree 20 lagrange polynomial
+  tmpC = 0
+  tmpL = 0
+  for i in range(numPoints2):
+    tmpC = ((2 * (i + 1)) - 1) * math.pi
+    tmpC = tmpC / (numPoints2*2.0)
+    tmpC = math.cos(tmpC)
+    xC20.append(tmpC)
+    tmpL = ((i/halfDegree2) - 1.0)
+    tmpL = round(tmpL,1)
+    #print(tmpL)
+    xL20.append(tmpL)
+  
+  #print(xC20)
+  #print(xL20)
+
+  tempError = 0
+  # -=- DEGREE 10 INTERPOLATING POLYNOMIAL GRAPHING -=-
+  xPNDD10 = [] # x-value points for graph for degree 10 NDD
+  # F(x) values for all xi = xPNDD10[i], used for the NDD table
+  fxNDD10 = [[0 for i in range(numPoints1)]
+        for j in range(numPoints1)]
+  yPNDD10 = [] # y-value points for graph for degree 10 NDD w/ evenly spaced points
+  tempFX = 0
+  fxCBV10 = [[0 for i in range(numPoints1)]
+        for j in range(numPoints1)]
+  yPCBV10a = [] # y-value points for chebyychev degree 10 graph
+  eNDD10 = [] # Error for degree 10 NDD w/ evenly spaced points
+  eCBV10 = [] # Error for degree 10 NDD w/ chebychev points
+  
+  for i in range(numPoints1):
+    # Calculates the base f(x) points for the NDD table
+    tempFX = math.pow(math.e, math.fabs(xL10[i]))
+    fxNDD10[i][0] = tempFX
+    tempFX = math.pow(math.e, math.fabs(xC10[i]))
+    fxCBV10[i][0] = tempFX
+    #print(tempFX)
+
+  tempNDD = 0
+  tempi = 0
+  fxNDD10 = dividedDiffTable(xL10, fxNDD10, numPoints1) # Calculates the newton divided difference table
+  fxCBV10 = dividedDiffTable(xC10, fxCBV10, numPoints1)
+  #printDiffTable(fxNDD10, numPoints1); #Testing purposes for the NDD table
+  for i in range(-100,101,1):
+    tempi = i / 100
+    xPNDD10.append(tempi)
+    tempNDD = NDD(tempi, xL10, fxNDD10, numPoints1)
+    yPNDD10.append(tempNDD)
+    tempError = actualFunction(tempi) - tempNDD
+    eNDD10.append(math.fabs(tempError))
+    tempNDD = NDD(tempi, xC10, fxCBV10, numPoints1)
+    yPCBV10a.append(tempNDD)
+    tempError = actualFunction(tempi) - tempNDD
+    eCBV10.append(math.fabs(tempError))
+    #yPCBV10b.append(math.cos(degree1 * math.acos(tempi)))
+
+  # Graphs the NDD interpolating polynomial of Degree 10 over interval [-1, 1] with a 0.05 step size
+  plt.plot(xPNDD10, yPNDD10) # Evenly Spaced Point NDD plot
+  plt.plot(xPNDD10, yPCBV10a, color='orange') # Chebyshev point plot
+  plt.title("Degree 10 NDD with evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("P10(x) values")
+  plt.show()
+
+  # -=- DEGREE 20 INTERPOLATING POLYNOMIAL GRAPHING -=-
+  xPNDD20 = [] # x-value points for graph for degree 20 NDD
+  # F(x) values for all xi = xPNDD20[i], used for the NDD table
+  fxNDD20 = [[0 for i in range(numPoints2)]
+        for j in range(numPoints2)]
+  yPNDD20 = [] # y-value points for graph for degree 20 NDD
+  tempFX = 0
+  fxCBV20 = [[0 for i in range(numPoints2)]
+        for j in range(numPoints2)]
+  yPCBV20a = []
+  eNDD20 = [] # Error for degree 20 NDD w/ evenly spaced points
+  eCBV20 = [] # Error for degree 20 NDD w/ chebychev points
+  
+  for i in range(numPoints2):
+    # Calculates the base f(x) points for the NDD table
+    tempFX = math.pow(math.e, math.fabs(xL20[i]))
+    fxNDD20[i][0] = tempFX
+    tempFX = math.pow(math.e, math.fabs(xC20[i]))
+    fxCBV20[i][0] = tempFX
+    #print(tempFX)
+
+  tempNDD = 0
+  tempi = 0
+  fxNDD20 = dividedDiffTable(xL20, fxNDD20, numPoints2) # Calculates the newton divided difference table
+  fxCBV20 = dividedDiffTable(xC20, fxCBV20, numPoints2)
+  #printDiffTable(fxNDD20, numPoints2); #Testing purposes for the NDD table
+  for i in range(-100,101,1):
+    tempi = i / 100
+    xPNDD20.append(tempi)
+    tempNDD = NDD(tempi, xL20, fxNDD20, numPoints2)
+    yPNDD20.append(tempNDD)
+    tempError = actualFunction(tempi) - tempNDD
+    eNDD20.append(math.fabs(tempError))
+    tempNDD = NDD(tempi, xC20, fxCBV20, numPoints2)
+    yPCBV20a.append(tempNDD)
+    tempError = actualFunction(tempi) - tempNDD
+    eCBV20.append(math.fabs(tempError))
+
+  # Graphs the NDD interpolating polynomial of Degree 20 over interval [-1, 1] with a 0.03333 step size
+  plt.plot(xPNDD20, yPNDD20) # Evenly Spaced Point NDD plot
+  plt.plot(xPNDD20, yPCBV20a, color='orange') # Chebyshev point plot
+  plt.ylim(1,5)
+  plt.title("Degree 20 NDD with evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("P20(x) values")
+  plt.show()
+
+  plt.plot(xPNDD20, yPNDD20) # Evenly Spaced Point NDD plot
+  plt.plot(xPNDD20, yPCBV20a, color='orange') # Chebyshev point plot
+  plt.title("Degree 20 NDD with evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("P20(x) values")
+  plt.show()
+
+  '''print(xPNDD10)
+  print(eNDD10)
+  print(eCBV10)
+  print(eNDD20)
+  print(eCBV20)'''
+  
+  # -=- DEGREE 10 INTERPOLATING POLYNOMIAL ERROR GRAPHING -=-
+  plt.plot(xPNDD10, eNDD10) # Error for Evenly spaced point NDD
+  plt.plot(xPNDD10, eCBV10, color='orange') # Error for Chebychev point NDD
+  plt.title("Error for Degree 10 NDD evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("|e^|x| - P10(x)| values")
+  plt.show()
+
+  # -=- DEGREE 20 INTERPOLATING POLYNOMIAL ERROR GRAPHING -=-
+  plt.plot(xPNDD20, eNDD20) # Error for Evenly spaced point NDD
+  plt.plot(xPNDD20, eCBV20, color='orange') # Error for Chebychev point NDD
+  plt.ylim(0,0.7)
+  plt.title("Error for Degree 20 NDD evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("|e^|x| - P20(x)| values")
+  plt.show()
+
+  plt.plot(xPNDD20, eNDD20) # Error for Evenly spaced point NDD
+  plt.plot(xPNDD20, eCBV20, color='orange') # Error for Chebychev point NDD
+  plt.title("Error for Degree 20 NDD evenly spaced points vs. Chebychev points")
+  plt.xlabel("x values")
+  plt.ylabel("|e^|x| - P20(x)| values")
+  plt.show()
+
+# End of main
+
+# Function to find the product term
+def proterm(i, value, x):
+    pro = 1;
+    for j in range(i):
+        pro = pro * (value - x[j]);
+    return pro;
+ 
+# Function for calculating the Newton's Divided Difference table
+def dividedDiffTable(x, fx, numPoints):
+    for i in range(1, numPoints):
+        for j in range(numPoints - i):
+            fx[j][i] = ((fx[j][i - 1] - fx[j + 1][i - 1]) / (x[j] - x[i + j]));
+    return fx;
+ 
+# Function that applies Newton's Divided Difference
+def NDD(value, x, fx, numPoints):
+    sum = fx[0][0];
+    for i in range(1, numPoints):
+        sum = sum + (proterm(i, value, x) * fx[0][i]);
+    return sum;
+
+# Function to print the NDD table for testing purposes
+def printDiffTable(fx, numPoints):
+    for i in range(numPoints):
+        for j in range(numPoints - i):
+            print(round(fx[i][j], 4), "\t",
+                               end = " ");
+        print("");
+
+def actualFunction(x):
+  # f(x) = e^|x|
+  return math.pow(math.e, math.fabs(x))
+
+main() # Calls main function - ALWAYS KEEP LAST
