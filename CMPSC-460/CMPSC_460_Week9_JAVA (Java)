@@ -1,0 +1,34 @@
+import java.util.*;
+
+abstract class Shape{
+  public abstract void show();
+}
+
+class Rectangle extends Shape {
+  private int length, width;
+  public void show() {
+    System.out.println("Rectangle");
+  }
+}
+
+class Circle extends Shape {
+  private int x, y, r;
+  public void show() {
+    System.out.println("Circle");
+  }
+}
+
+public class Main {
+  public static void print(List<Shape> c) { //List<? extends Shape> c
+    c.add(new Rectangle());
+    for(Shape o : c) {
+      o.show();
+    }
+  }
+  public static void main(String[] args) {
+    List<Shape> ls = new ArrayList<Shape>();
+    ls.add(new Rectangle());
+    ls.add(new Circle());
+    print(ls);
+  }
+}
