@@ -1,0 +1,21 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main() 
+{
+  double peanuts = 0.0;
+  int bananas = 0;
+  double total;
+  cout << "How many peanuts? ";
+  cin >> peanuts;
+  cout << "How many bananas? ";
+  cin >> bananas;      
+   
+  total = (peanuts * 1) + (bananas * .25);
+   
+  cout << fixed << setprecision(2);
+  cout << "Amount: $" << total << endl;
+  
+  return 0;
+}
