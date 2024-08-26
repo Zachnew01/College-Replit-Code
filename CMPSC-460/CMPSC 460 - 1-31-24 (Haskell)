@@ -1,0 +1,95 @@
+module Main where
+{-
+-- mem 5 [1 2 3 4] => false
+-- mem 4 [1 2 3 4] => true
+list1t4 = [1..4]
+list9t0 = [9,8,7,6,5,4,3,2,1,0]
+listNtP = [-4..4]
+mymax = 1000000
+
+mem:: Int -> [Int] -> Bool
+mem e [] = False
+mem e (x:xs) = ((e == x) || mem e xs)
+{- Alternatively 
+  mem e (x:xs)
+  | e == x = True
+  | otherwise = mem e xs
+-}
+
+extract:: Int -> [Int] -> Int
+extract i [] = -1
+extract 1 (x:xs) = x
+extract i (x:xs) = extract (i-1) xs
+
+mymin:: [Int] -> Int
+mymin [x] = x
+mymin (x:xs)
+  | x < mymin xs = x
+  | otherwise = mymin xs
+
+mymin2:: Int -> [Int] -> Int
+mymin2 m [] = m
+mymin2 m (x:xs)
+  | x < m = mymin2 x xs
+  | otherwise = mymin2 m xs
+
+sq x = x * x
+pos x = x > 0
+--mymap:: (Int -> Int) -> [Int] -> [Int]
+mymap:: (a -> b) -> [a] -> [b] -- Can have generic data types
+mymap func [] = []
+mymap func (x:xs) = func x : mymap func xs
+
+-- Currying
+add:: Int -> (Int -> Int)
+add x = (\y->x+y)
+  -- Equivalent
+addP:: Int -> Int -> Int
+addP x y = x + y-}
+
+-- Can define our own datatype
+type Node = Int
+type Edge = (Node, Node)
+type Graph = [Edge]
+type Path = [Node]
+
+g:: Graph
+g = [(1,2),(1,3),(2,3),(2,4),(3,4)]
+
+frst (a,b) = a
+scnd (a,b) = b
+
+neighbors:: Node -> Graph -> [Node]
+--neighbors n [] = []
+neighbors n g = [scnd e | e <- g, frst e == n]
+-- Get the second node of the edges where first node is n
+
+detach:: Node -> Graph -> Graph
+detach n g = [e | e <- g, frst e /= n && scnd e /= n]
+-- Keep those edges that do not contain n
+
+main = do
+  {-print(mem 5 list1t4)
+  print(mem 4 list1t4)
+  print(extract 1 list9t0)
+  print(extract 5 list9t0)
+  print(extract 1 [])
+  print(mymin list1t4)
+  print(mymin list9t0)
+  print(mymin2 mymax list1t4)
+  print(mymin2 mymax list9t0)
+  print(mymap sq list1t4)
+  print(mymap pos listNtP)
+  print(mymap (\x->x*x) list1t4) -- Lambda: \<input> -> <output/operation>
+  print(mymap (\x->x>0) listNtP)
+  
+  print((add 5)(2))
+  print(add(5)(7))-}
+  print(neighbors 1 g)
+  print(neighbors 2 g)
+  print(neighbors 3 g)
+  print(neighbors 4 g)
+  print(detach 1 g)
+  print(detach 2 g)
+  print(detach 3 g)
+  print(detach 4 g)
