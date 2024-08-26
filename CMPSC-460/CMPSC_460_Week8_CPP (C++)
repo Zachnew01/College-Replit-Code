@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+class Father {
+
+  public:
+    int id_f;
+
+    int getID(){return id_f;};
+
+};
+
+class Mother {
+
+  public:
+    int id_m;
+
+    int getID(){return id_m;};
+};
+
+class Child: public Father { // , public Mother
+
+  public:
+    int id_c;
+
+    int getID(){return id_c;};
+};
+
+template<class T>
+T mymin(T a, T b){
+  return(a < b) ? a : b;
+}
+
+
+int main() {
+  /*
+  //Parent P;
+  Child C;
+  C.id_f = 5;
+  // C.id_m = 7;
+  C.id_c = 8;
+  cout << "Father: " << C.id_f << endl;
+  //cout << "Mother: " << C.id_m << endl;
+  cout << "Child: " << C.id_c << endl;
+  cout << "Child.getID(): " << C.getID() << endl;
+
+  Father f;
+  f.id_f = 10;
+  cout << "Father: " << f.getID() << endl;
+  f = C; // Can set the values of the superclass to the values from the superclass portion of a subclass.
+  cout << "Father: " << f.getID() << endl;
+  // cannot be done: C = f;
+  */
+
+  cout << mymin<int>(3,5) << endl;
+  cout << mymin<double>(3.14,10.23) << endl;
+  cout << mymin<string>("Hello","World") << endl;
+}
