@@ -1,0 +1,114 @@
+# Basic Python Notetaking for CMPSC 441: Artificial Intelligence taken during Week 1 on 8/21/23
+
+# Python is an interpreted language
+# REPL = Read Evaluate P Look
+# Likely to use IDLE shell for Python development
+#   Functions can be used made by creating new files
+# Python.org for python documentation (seachable)
+
+# Data Types
+#   numeric (numbers) and sequence (strings, etc)
+#   None - doesn't exist
+#   bool - (either True or False)
+#   int - integer number
+#   str - string of characters enclosed by " " or ' '
+#     \" or \' for literal " or ' in strings (or alternate string enclosure)
+#   list - collection of variables
+
+# Operations
+#   + , - , * , / , % , ** (exponential), // (integer division)
+#   Mathematical expressions are left associative (except **)
+#   Abs(x) - Absolute value
+
+# Example
+#   a = "world"
+#   a = "world"
+#   b = "you"
+#   a outputs "world"
+# Formatted Strings
+#   "hello {} and {}".format(a,b) outputs "hello world and you"
+#   f"hello {a} and {b}" outputs same thing
+# print() function used to output values
+
+# String Operators
+#   x in y : is a substring x in a string y
+#   x not in y : is a substring x not in a string y
+#   x + y : concatenation
+#   # * x : repeats the string x a number # of times
+#   x[#] : returns the character at index # in string x
+#     can use negative numbers count indexes from the right
+#   x[#1:#2] : returns a substring from index #1 to index #2 in string x
+#   x[#:] : returns a substring from index # until the end of string x
+#   x[#1:#2:#3] : subtring from index #1 to index #2 with a step size of #3 in string x
+#   x.index(y) : returns the index of the first instance of substring y in string x
+#   x.count(y) : returns number of instances of substring y in string x
+
+# List (seqeuence)
+#   l = [a, b, c, ...] : can contain any data types
+#   l[#] : returns the element at index # in list l
+#   l[#] = x  : assigns element x to index # in list l
+#   l.remove(x) : removes element x from list l
+#   l.pop() : outputs and removes the last element in list l
+#   l.extend(j) : adds the elements of list j to the end of list l
+#   l.append(x) : appends element x to the end of list l
+#   l + j : concatenate list l with list j (like l.extend(j))
+#   l.remove(x) : removes element x from list l
+#   del l[#] : removes the element at index # from list l
+
+# tuple (sequence)
+#   t = (a, b, c, ...) : immutable
+#   t[#] : returns the element at index # in tuple t
+#   slicing: t[#1:#2:#3] : returns elements in tuple t from #1 to index #2 with a step size of #3 (index #1 and #2 can be empty for the start/end of the tuple)
+#   t = (a,) : allows for single-element tuples
+#   t + r : returns a tuple concatenated from t and r
+#   can create a multi-element tuple with just a list of elements.
+#     packing : t = x, y, z
+#     unpacking : a, b, c = t : sets a = x, b = y, and c = z
+
+# range (sequence)
+#   r = range(#1,#2) : allows for the generation of a range of elements from element #1 to element #2
+#   list(r) : generates a list of elements in the range
+#   x in r : outputs whether element x in is range r
+
+# set (sequence)
+#   s = set() : set is like a list with no duplicates
+#   s = set([a, b, c, ...]) : set s generated from list s
+#   s.add(x) : adds element x from set s
+#   s.pop() : outputs and removes the first element in the set
+#   remove and del : removing elements from the set
+#   s.('') : set generated from a string
+#   s.union(r) : outputs the union of sets s and r
+#   s.intersection(r) : outputs the intersection of sets s and r
+#   s.difference(r) : outputs the difference of sets s and r
+#   r.issubset(s) : outputs whether set r is a subset of set s
+#   s^r : xor : outputs elements in set s but not set r
+
+# dictionary (sequence)
+#   d = dict() : generates a dictionary
+#   d[a] = x : adds the element x to dictionary d with key a
+#   d = {a:x, b:y, ...} : generates a dictionary with key-value pairs
+#   can convert a list that contains tuples of 2 elements into a dictionary
+#     d = dict([(a,x),(b,y),(c,z),...])
+#   d = dict(a=x,b=y,c=z, ...) : generates a dictionary
+#   d[a] : outputs the value with key a in dictionary d
+#   d[a] = x : sets the value at key a to element x in dictionary d
+#   d.keys() = returns a list of the keys
+#   d.values() = returns a list of the values
+#   a in d : returns whether key a is in dictionary d
+#   del d[a] : deletes the key-value pair with key a in dictionary d
+#   d[a].append(x) : adds value x with key a at the end of dictionary d
+  
+# defaultDict : from collections import defaultdict
+#   from (library) import (function)
+#   d = defaultdict(l) : makes the default value in a dictionary to be a list (?)
+#   forloop : for a in l: : uses a for loop for every element a in list l
+#     for a,b in l: : iterates over each pair of tuples in l with each tuple containing element a and element b
+
+# Example
+#   from collections import defaultdict
+#   s = [('a',1),('b',2),('c',3)]
+#   d = defaultdict(list)
+#   for k,v in s:
+#      d[k].append(v)
+  
+#   print(d) -> defaultdict(<class 'list'>, {'a': [1], 'b': [2], 'c': [3]})
