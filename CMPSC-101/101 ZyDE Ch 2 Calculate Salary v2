@@ -38,3 +38,6 @@ The program below has been generalized to read a user's input value for hourlyWa
 Run the program. Notice the user's input value of 10 is used. Modify that input value, and run again.
 Generalize the program to get user input values for workHoursPerWeek and workWeeksPerYear (change those variables' initializations to 0). Run the program.
 monthsPerYear will never change, so declare that variable as const. Use the standard for naming constant variables. Ex: const int MAX_LENGTH = 99. Run the program.
+Change the values in the input area below the program, and run the program again.
+
+*/
