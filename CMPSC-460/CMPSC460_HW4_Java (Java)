@@ -1,0 +1,120 @@
+// Zachary Newman - ZTN5011
+
+class MyArrayNode<T extends Comparable<T>>{
+  T element;
+  MyArrayNode<T> next;
+  MyArrayNode(T element){
+    this.element = element;
+    this.next = null;
+  }
+}; // End of MyArrayNode<T>
+
+class MyArray<T extends Comparable<T>>{
+  // Comparable : o.compareTo(o) | (-): less than, (+) greater than
+  
+  MyArrayNode<T> head;
+
+  public void add(T element){ // TODO: Modify to handle a list of arguments to make a new object of the class
+    if (head == null){
+      head = new MyArrayNode<T>(element);
+    }
+    else{
+      MyArrayNode<T> tempHead = head;
+      while(tempHead.next != null){
+        tempHead = tempHead.next;
+      }
+      tempHead.next = new MyArrayNode<T>(element);
+    }
+  } // End of Add
+
+  public void print(){
+    if(head == null){
+      System.out.println();
+    }
+    else {
+      MyArrayNode<T> tempHead = head;
+      while(tempHead.next != null){
+        System.out.print(tempHead.element);
+        System.out.print(" ");
+        tempHead = tempHead.next;
+      }
+      System.out.print(tempHead.element);
+      System.out.println();
+    }
+  } // End of print
+
+  public void sort(){
+    if(head == null){
+      // do nothing
+    }
+    else {
+      MyArrayNode<T> toSort = head;
+      while(toSort.next != null) { // For every element, find the smallest after it and swap them
+        MyArrayNode<T> smallest = toSort;
+        MyArrayNode<T> curr = toSort.next;
+        while(curr != null){ // Find smallest element
+          if(curr.element.compareTo(smallest.element) < 0){
+            smallest = curr;
+          }
+          curr = curr.next;
+        }
+        // Swap toSort and smallest
+        T temp = toSort.element;
+        toSort.element = smallest.element;
+        smallest.element = temp;
+        // Move to sort next element
+        toSort = toSort.next;
+      }
+    }
+  } // end of sort
+}; // End of MyArray<T>
+
+class Employee implements Comparable<Employee>{
+  // Full name: String
+  // Email: String
+  // Year: Numeric /* the year that the employee started */
+  public String fullName;
+  String email;
+  Integer year;
+
+  Employee(String fullName, String email, Integer year){
+    this.fullName = fullName;
+    this.email = email;
+    this.year = year;
+  }
+  
+  public int compareTo(Employee other){
+      return this.fullName.compareTo(other.fullName);
+  }
+
+  @Override
+  public String toString(){
+    return fullName + ", " + email + ", " + year + "\n";
+  }
+  
+}
+
+
+public class Main {
+  public static void main(String[] args) {
+    MyArray<Integer> arr = new MyArray<Integer>();
+    arr.add(13);
+    arr.add(5);
+    arr.add(8);
+    arr.print();
+    arr.sort();
+    arr.print();
+
+    System.out.println("");
+    
+    MyArray<Employee> emp = new MyArray<Employee>();
+    emp.add(new Employee("Leroy Gibbs", "ljb123@psu.edu", 2001));
+    emp.add(new Employee("Donald Mallard", "dhm456@psu.edu", 2001));
+    emp.add(new Employee("Caitlin Todd", "ckt525@psu.edu", 2002));
+    emp.add(new Employee("Anthony DiNozzo", "atd707@psu.edu", 2002));
+    emp.add(new Employee("Abigail Sciuto", "abs789@psu.edu", 2001));
+    emp.print();
+    emp.sort();
+    emp.print();
+  }
+}
