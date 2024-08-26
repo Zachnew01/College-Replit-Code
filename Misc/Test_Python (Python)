@@ -1,0 +1,35 @@
+import time
+
+test1 = input("Enter a number: ")
+test2 = input("Enter a number: ")
+test3 = input("Enter a number: ")
+if(test1.isnumeric() and test2.isnumeric() and test3.isnumeric()):
+  print("You entered numbers!")
+else:
+  print("One of the inputs wasn't a number")
+
+flagW = True
+sDay = 0
+sMonth = 0
+sYear = 0
+while (flagW):
+  tempDay = input("Enter Start Date - Day: ")
+  tempMonth = input("Enter Start Date - Month: ")
+  tempYear = input("Enter Start Date - Year: ")
+  print("Test Message 1")
+  time.sleep(10)
+  if(tempDay.isNumeric() and tempMonth.isNumeric() and tempYear.isNumeric()):
+    print("Test Message 2")
+    time.sleep(10)
+    flagW = False
+    sDay = int(tempDay)
+    sMonth = int(tempMonth)
+    sYear = int(tempYear)
+    print("Test Message 3")
+    time.sleep(10)
+  else:
+    print("Invalid Date - Repeat Inputs")
+# End While
+print(sDay)
+print(sMonth)
+print(sYear)
