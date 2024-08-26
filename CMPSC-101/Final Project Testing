@@ -1,0 +1,230 @@
+#include <iostream>
+#include <cstdlib> 
+#include <ctime>
+#include <fstream>
+using namespace std;
+
+// -- CONSTANT VALUES --
+const int ROWS = 10;
+const int COLUMNS = 20;
+const string T = "\U0001F332"; // "\U0001F332" Tree
+const string P = "\U0001F920"; // "\U0001F920" Cowboy hat face
+const string F = " ";
+const string E = "\U0001F573"; // "\U0001F573" Hole
+const string A = "A"; // Monster 1
+const string B = "B"; // Monster 2
+const string C = "C"; // Monster 3
+const string S = "$"; // Shop
+
+const bool DEBUG_MODE = false; // Changes whether the console clears after one interation of the main game loop.
+
+//FIX_ME: Shouldn't be global Variables:
+bool isGameOver = false; // True when the game is over
+bool isValidMovement = false; // True when the input movement command is valid 
+bool isLastMoveValid = true; // True if the last input movement command was valid.
+
+string gameMap[ROWS][COLUMNS]
+// Columns
+// 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 20
+{                                            // Rows
+  {T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T}, // 1
+  {T,P,F,F,F,T,F,F,F,F,F,F,F,F,T,A,F,F,F,T}, // 2
+  {T,F,F,F,F,T,F,F,F,F,F,F,F,F,T,B,F,F,S,T}, // 3
+  {T,F,F,T,T,T,T,T,F,F,F,F,F,F,T,C,F,F,F,T}, // 4
+  {T,F,F,F,F,T,F,F,F,F,F,F,F,F,T,T,T,F,T,T}, // 5
+  {T,F,F,F,F,T,F,F,F,F,F,F,F,F,F,F,F,F,F,T}, // 6
+  {T,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,T}, // 7
+  {T,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,E,F,T}, // 8
+  {T,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,T}, // 9
+  {T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T} // 10
+};
+
+// -- FUNCTION DECLARATIONS --
+
+void displayMap(); // outputs the data in gameMap
+int determineMoveType(int endRow, int endCol); // determines what the type of move the attempted action is.
+void moveAction(int startRow, int startCol, int endRow, int endCol, int moveType); // uses the move type to either move the player character or do something else (FIX_ME reimplement as multiple functions based on moveType)
+void clearConsole(); //Removes all outputs and inputs from the console
+
+bool hitCheck(double accuracy, double dexterity); //FIX_ME add parameters and definition (determines if the attack hits or misses)
+double damageTarget(int numDice, int dieSize, double strength); //FIX_ME add definition (determines how much damage is dealt to the target)
+void displayStats(double health, double strength, double accuracy, double dexterity, double experience); //FIX_ME add definition (displays the stats of the player character)
+
+int main() 
+{
+  string playerMove = ""; // Movement Key Pressed
+  
+  int playerRow = 1; // Starting Player Row
+  int playerCol = 1; // Starting Player Column
+  int moveType = 0; // Whether the direction of movement is free or occupied.
+
+  while(!isGameOver) // -- MAIN GAME LOOP --
+  {
+    //FIX_ME (Below) reorder how map/info is displayed
+    clearConsole(); //Clears the console of all outputs/inputs.
+    displayMap();
+    cout << "w - Up | a - Left | s - Down | d - Right | q - Quit" << endl;
+    cout << "Input a movement direction: ";
+    cin >> playerMove;
+    
+    //Player Movement/Action Handler
+    while(!isValidMovement)
+    {
+      if(!isLastMoveValid)
+      {
+        clearConsole(); //Clears the console of all outputs/inputs.
+        displayMap();
+        cout << "w - Up | a - Left | s - Down | d - Right | q - Quit" << endl;
+        cout << "Input a VALID movement direction: ";
+        cin >> playerMove;
+      }
+
+      if (playerMove == "q")
+      {
+        isValidMovement = true;
+        isGameOver = true;
+      }
+      else if (playerMove == "w")
+      {
+        moveType = determineMoveType(playerRow-1, playerCol);
+        moveAction(playerRow, playerCol, playerRow-1, playerCol, moveType);
+        if (moveType == 2)
+        {
+          playerRow -= 1;
+        }
+
+      }
+      else if (playerMove == "a")
+      {
+        moveType = determineMoveType(playerRow, playerCol-1);
+        moveAction(playerRow, playerCol, playerRow, playerCol-1, moveType);
+        if (moveType == 2)
+        {
+          playerCol -= 1;
+        }
+
+      }
+      else if (playerMove == "s")
+      {
+        moveType = determineMoveType(playerRow+1, playerCol);
+        moveAction(playerRow, playerCol, playerRow+1, playerCol, moveType);
+        if (moveType == 2)
+        {
+          playerRow += 1;
+        } 
+      }
+      else if (playerMove == "d")
+      {
+        moveType = determineMoveType(playerRow, playerCol+1);
+        moveAction(playerRow, playerCol, playerRow, playerCol+1, moveType);
+        if (moveType == 2)
+        {
+          playerCol += 1;
+        }
+      }
+      else {
+        isLastMoveValid = false;
+      }
+    } //End of Movement/Action Handler
+    isValidMovement = false;
+  }
+
+} // end of main
+
+// Displays the current game map
+void displayMap()
+{
+  for (int row = 0; row < ROWS; row++)
+  {
+    for (int col = 0; col < COLUMNS; col++)
+    {
+      cout << gameMap[row][col] << " ";
+    }
+    cout << endl;
+  }
+} // end of displayMap
+
+int determineMoveType(int endRow, int endCol)
+{
+/*
+  moveType = 0 : trees      blocking movement
+  moveType = 1 : endpoint   blocking movement
+  moveType = 2 : floor      allowing movement
+  moveType = 3 : monster A  allowing attack
+  moveType = 4 : monster B  allowing attack
+  moveType = 5 : monster C  allowing attack
+  moveType = 6 : player     allowing attack
+*/
+  int moveType = 0;
+  if(gameMap[endRow][endCol] == T)
+  {
+    moveType = 0;
+  }
+  else if (gameMap[endRow][endCol] == E)
+  {
+    moveType = 1;
+  }
+  else if (gameMap[endRow][endCol] == F)
+  {
+    moveType = 2;
+  }
+  else if (gameMap[endRow][endCol] == A)
+  {
+    moveType = 3;
+  }
+  else if (gameMap[endRow][endCol] == B)
+  {
+    moveType = 4;
+  }
+  else if (gameMap[endRow][endCol] == C)
+  {
+    moveType = 5;
+  }
+  else if (gameMap[endRow][endCol] == P)
+  {
+    moveType = 6;
+  }
+  else if (gameMap[endRow][endCol] == S)
+  {
+    moveType = 7;
+  }
+  return moveType;
+} // end of validateMove
+
+void moveAction(int startRow, int startCol, int endRow, int endCol, int moveType)
+{
+  if (moveType == 0)
+  {
+    cout << "Invalid Move" << endl;
+    isValidMovement = false;
+    isLastMoveValid = false;
+  }
+  else if (moveType == 1)
+  {
+    cout << "You've reached the end. Congrats!" << endl;
+    isValidMovement = true;
+    isLastMoveValid = true;
+    isGameOver = true;
+  }
+  else if (moveType == 2)
+  {
+    gameMap[endRow][endCol] = P;
+    gameMap[startRow][startCol] = F;
+    isValidMovement = true;
+    isLastMoveValid = true;
+  }
+  else
+  {
+    cout << "Invalid Move" << endl;
+    isValidMovement = false;
+    isLastMoveValid = false;
+  }
+} // end of moveAction
+
+void clearConsole()
+{
+  if (!DEBUG_MODE) // Clears the console if not in Debug mode
+    {
+      system("clear");
+    }
+}
