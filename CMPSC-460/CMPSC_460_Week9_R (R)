@@ -1,0 +1,6 @@
+# R code
+fun = function(first , second){
+print(first)
+print(second)
+}
+fun(second = 2, first = 1)
