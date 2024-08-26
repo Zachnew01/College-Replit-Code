@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+
+  int numOfDyads = 0;
+  int numPowers = 1;
+  int totalPowers = 0;
+  cout << "Number of Powers: ";
+  cin >> totalPowers;
+  cout << endl;
+  while(numPowers < totalPowers) {
+    numOfDyads += numPowers;
+    numPowers++;
+  }
+ cout << numOfDyads;
+}
