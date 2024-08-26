@@ -1,0 +1,63 @@
+import java.util.*;
+
+abstract class Shape{
+  public abstract void show();
+}
+
+class Rectangle extends Shape {
+  private int length, width;
+  public void show() {
+    System.out.println("Rectangle");
+  }
+}
+
+class Circle extends Shape {
+  private int x, y, r;
+  public void show() {
+    System.out.println("Circle");
+  }
+}
+
+public class Main {
+
+  public static void print(Collection<?> c) {
+    for (Object o : c) {
+      System.out.println(o);
+    }
+  }
+  
+  public static void printShape(List<Shape> c) { // or (List<? extends Shape> c)
+    // If using List<? extends Shape> c | can't do c.add(new Rectangle()); due to potential incompatible types
+    for (Shape o : c) {
+      o.show();
+    }
+  }
+  
+  public static void main(String[] args) {
+
+    List<String> ls = new ArrayList<String>();
+    // Can easily change to List<String> lst = new LinkedList<String>();
+    ls.add("Hello");
+    ls.add("World");
+    System.out.println(ls);
+
+    // Not Possible: List<Object> lo = ls;
+    // However, you can do:
+    List<Object> lo = new ArrayList<Object>();
+    lo.add("Hello");
+    lo.add("World");
+    System.out.println(lo);
+
+    // Keep the actual objects abstract if changes are needed;
+    // PriorityQueue<String> lst = new Heap<String>();
+    print(ls);
+
+    // Shapes
+    List<Shape> lshape = new ArrayList<Shape>();
+    lshape.add(new Rectangle());
+    lshape.add(new Circle());
+    System.out.println(lshape);
+    printShape(lshape);
+    
+  }
+}
