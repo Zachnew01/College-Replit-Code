@@ -1,0 +1,19 @@
+def add(x,y):
+  return x + y
+
+print(add(5,7))
+
+def plus(x):
+  return lambda y: x+y
+
+print(plus(5)(7))
+
+# Function takes a function as parameter and returns function
+
+def foo(func,x):
+  return lambda y: func(x,y)
+
+print(foo(add,5)(7))
+
+print([2*x for x in range(1,11)])
+print([2*(x+1) for x in range(10)])
