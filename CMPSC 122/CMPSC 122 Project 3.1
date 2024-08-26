@@ -1,0 +1,560 @@
+// Nathaniel Luffey and Zachary Newman - Project #3.cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Global Constants
+const bool TEST_DESTRUCTORS = false; // Allows cout functions in destructors if true
+const bool CLEAR_CONSOLE = false; // Clears the console after every interation of the loop
+
+void clearConsole()
+{
+  if (CLEAR_CONSOLE)
+  {
+    system("clear");
+  }
+}
+
+class Course // Course (Class) Class
+{
+  // Private Member Variables - Course
+  string courseName;
+  string instructorName;
+  double grade;
+  int semester;
+  string courseDetail;
+  double credit;
+
+  public:
+  // Public Member Functions - Course
+    Course()  // Default Constructor
+    {
+      courseName = "";
+      instructorName = "";
+      grade = 0.0;
+      semester = 0;
+      courseDetail = "";
+      credit = 0.0;
+    }
+    Course(string cName, string instName, double grd, int smst, string cDetail, double crd)
+    {  // Constructor w/ variables
+      courseName = cName;
+      instructorName = instName;
+      grade = grd;
+      semester = smst;
+      courseDetail = cDetail;
+      credit = crd;
+    }
+  // Setter Functions - Course
+  void setCourseName(string input) {
+    courseName = input;
+  }
+  void setInstructName(string input) {
+    instructorName = input;
+  }
+  void setGrade(double input) {
+    grade = input;
+  }
+  void setSemester(int input) {
+    semester = input;
+  }
+  void setCourseDetail(string input){
+    courseDetail = input;
+  }
+  void setCredit(double input){  
+    credit = input;
+  }
+  // Getter Functions - Course
+  string getCourseName() const {
+    return courseName;
+  }
+  string getInstructName() const {
+    return instructorName;
+  }
+  double getGrade() const {
+    return grade;
+  }
+  int getSemester() const {
+    return semester;
+  }
+  string getCourseDetail() const {
+    return courseDetail;
+  }
+  double getCredit() const {
+    return credit;
+  }
+  ~Course() // Destructor Function - Course
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting course with name " << courseName << ".\n";
+    }
+    courseName = "";
+    instructorName = "";
+    grade = 0.0;
+    semester = 0;
+    courseDetail = "";
+    credit = 0.0;
+  }
+};
+
+class Book // Book Class
+{
+  // Private Member Variables - Book
+  string bookName;
+  string authorFirstName;
+  string authorLastName;
+  int copyNum;
+  string reserveDate;
+  string returnDate;
+
+  public:
+  // Public Member Functions - Book
+  Book()  // Default Constructor Function
+  {
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "00/00/0000";
+    returnDate = "00/00/0000";
+  }
+  Book(string bName, string authFname, string authLname, int cNum, string reserveD, string returnD)
+  {  // Constructor w/ variables
+    bookName = bName;
+    authorFirstName = authFname;
+    authorLastName = authLname;
+    copyNum = cNum;
+    reserveDate = reserveD;
+    returnDate = returnD;
+  }
+  // Setter Functions - Course
+  void setBookName(string input) {
+    bookName = input;
+  }
+  void setAuthorFirst(string input) {
+    authorFirstName = input;
+  }
+  void setAuthorLast(string input) {
+    authorLastName = input;
+  }
+  void setCopyNum(int input) {
+    copyNum = input;
+  }
+  void setReserveDate(string input) {
+    reserveDate = input;
+  }
+  void setReturnDate(string input) {
+    returnDate = input;
+  }
+  // Getter Functions - Course
+  string getBookName() const {
+    return bookName;
+  }
+  string getAuthorFirst() const {
+    return authorFirstName;
+  }
+  string getAuthorLast() const {
+    return authorLastName;
+  }
+  int getCopyNum() const {
+    return copyNum;
+  }
+  string getReserveDate() const {
+    return reserveDate;
+  }
+  string getReturnDate() const {
+    return returnDate;
+  }
+  ~Book() // Destructor Function - Book
+  {
+    if (TEST_DESTRUCTORS) {
+      cout << "Deleting book with name " << bookName << ".\n";
+    }
+    bookName = "";
+    authorFirstName = "";
+    authorLastName = "";
+    copyNum = 0;
+    reserveDate = "";
+    returnDate = "";
+  }
+};
+
+class StudentList
+{
+private:
+  struct ListNode
+  {
+    string name;
+    long ID;
+    double GPA;
+    int semester;
+    vector<Course> courses;
+    vector<Book> books;
+    struct ListNode *next;
+  };
+  ListNode *head;
+  int bookVectorDisplay(ListNode* node)
+  {
+    // Variable Declarations
+    int bookNum;
+    // if Statement to check if books is empty, otherwise run function
+    if (node->books.empty())
+    {
+      cout << "Student " << node->name << " has no books." << endl;
+      return -1;
+    }
+    else {
+      // Display of all the books in the vector to choose from
+      cout << "Current books for " << node->name << ": \n";
+      for (int i = 0; i < node->books.size(); i++)
+      {
+        cout << (i + 1) << " - " << node->books[i].getBookName() << endl;
+      }
+      // User Input
+      cout << "Input the book number to use: ";
+      cin >> bookNum;
+      bookNum -= 1;
+      cout << endl;
+      return bookNum;
+    }
+  }
+public:
+  // Constructor
+  StudentList() 
+  { head = nullptr; }
+  // Linked List Operations
+  void appendNode(string n, long i, double g, int s)
+  {
+    ListNode *newNode;
+    ListNode *counterPTR;
+    // Allowcate newNode and store Student Info there
+    newNode = new ListNode;
+    newNode->name = n;
+    newNode->ID = i;
+    newNode->GPA = g;
+    newNode->semester = s;
+    newNode->next = nullptr;
+    // If there are no nodes in the list
+     // make newNode the first node.
+    if (!head) { head = newNode; }
+     else // Otherwise, insert newNode at end.
+    {
+      // Initialize counterPTR to head of list.
+      counterPTR = head;
+      // Find the last node in the list.
+      while (counterPTR->next)
+      	counterPTR = counterPTR->next;
+      // Insert newNode as the last node.
+      counterPTR->next = newNode;
+     }
+  }
+  void displayList()
+  {
+    ListNode *counterPTR; // Moves through the list
+    int nodeCount = 1;
+    // Position counterPTR at the head of the list.
+    counterPTR = head;
+    // While counterPTR points to a node, traverse the list
+    if(counterPTR)
+    {
+      cout << "Current Students:\n";
+      while(counterPTR)
+      {
+        cout << nodeCount << " - " << counterPTR->name << endl;
+        nodeCount++;
+        counterPTR = counterPTR->next;
+      }
+    }
+    else
+    {
+      cout << "There are no Students." << endl;
+    }
+  }
+  void deleteNode(int num)
+  {
+    ListNode *counterPTR;
+    ListNode *prevNode;
+    int nodeCount = 1;
+    // If list is empty, do nothing
+    if(!head) 
+    { return; }
+    // Determine if the first node is the one
+    if(nodeCount == num)
+    {
+      counterPTR = head->next;
+      delete head;
+      head = counterPTR;
+    }
+    else
+    {
+      // Initializes counterPTR to the head of the list
+      counterPTR = head;
+      // Skip all nodes who aren't the numbered 'num' in the list
+      while(counterPTR != nullptr && nodeCount != num)
+      {
+        prevNode = counterPTR;
+        counterPTR = counterPTR->next;
+        nodeCount++;
+      }
+      // If counterPTR is not at the end of the list,
+      // link the previous node to the node after
+      // counterPTR, then delete counterPTR.
+      if (counterPTR)
+      {
+        prevNode->next = counterPTR->next;
+        delete counterPTR;
+      }
+    }
+  }
+  ListNode* selectNode(int num)
+  {
+    ListNode *counterPTR; // Moves through the list
+    int nodeCount = 1;
+    // Position counterPTR at the head of the list.
+    counterPTR = head;
+    // While counterPTR points to a node, traverse the list
+    while(nodeCount != num && counterPTR != nullptr)
+      {
+        counterPTR = counterPTR->next;
+        nodeCount++;
+      }
+    // If counterPTR points to a valid node and the nodeCount is equal to the parameter num, return counterPTR.
+    if(counterPTR != nullptr && nodeCount == num)
+    {
+      return counterPTR;
+    }
+    else { return nullptr; }
+  }
+  void addCourse(ListNode* node)  // Adds a course to a Student node
+  {
+    // Variable Declarations
+    int semesterNum;
+    string courseName;
+    string instructorName;
+    double grade;
+    string courseDetail;
+    double credit;
+    Course tempCourse;
+    // User Input
+    cout << "Input the semester of the course to add: ";
+    cin >> semesterNum;
+    cout << "Input the name of the course: ";
+    getline (cin >> ws,courseName);
+    cout << "Input the instructor's name: ";
+    getline (cin >> ws,instructorName);
+    cout << "Input the current grade for the course: ";
+    cin >> grade;
+    cout << "Input the details of the course: ";
+    getline (cin >> ws,courseDetail);
+    cout << "Input the credit gained from the course: ";
+    cin >> credit;
+    // Course Data Input
+    tempCourse.setCourseName(courseName);
+    tempCourse.setInstructName(instructorName);
+    tempCourse.setGrade(grade);
+    tempCourse.setSemester(semesterNum);
+    tempCourse.setCourseDetail(courseDetail);
+    tempCourse.setCredit(credit);
+    node->courses.push_back(tempCourse);
+  }
+  void removeCourse(ListNode* node) // Removes a course from a Student node
+  {
+    // Variable Declarations
+    int courseNum;
+    // if Statement to check if courses is empty, otherwise run function
+    if (node->courses.empty())
+    {
+      cout << "Student " << node->name << " has no courses." << endl;
+    }
+    else {
+      // Display of all the courses in the vector to choose from
+      cout << "Current courses for " << node->name << ": \n";
+      for (int i = 0; i < node->courses.size(); i++)
+      {
+        cout << (i + 1) << " - " << node->courses[i].getCourseName();
+        cout << " - Semester: " << node->courses[i].getSemester() << endl;
+      }
+      // User Input
+      cout << "Input the course you would like to remove: ";
+      cin >> courseNum;
+      courseNum -= 1;
+      // Course Data Reset/Removal
+      node->courses.erase(node->courses.begin() + courseNum);
+      }
+  }
+  void borrowBook(ListNode* node) // Adds a book to a given a Student node
+  {
+    // Variable Declarations
+    int bookNum;
+    string bookName;
+    string authorFirstName;
+    string authorLastName;
+    int copyNum;
+    string reserveDate;
+    string returnDate;
+    Book tempBook;
+    // User Input
+    cout << "Input the title of the book: ";
+    getline (cin >> ws,bookName);
+    cout << "Input the author's first name: ";
+    cin >> authorFirstName;
+    cout << "Input the author's last name: ";
+    cin >> authorLastName;
+    cout << "Input the number of copies: ";
+    cin >> copyNum;
+    cout << "Input the date the book was reserved: ";
+    cin >> reserveDate;
+    cout << "Input the book's return date: ";
+    cin >> returnDate;
+    // Book Data Input
+    tempBook.setBookName(bookName);
+    tempBook.setAuthorFirst(authorFirstName);
+    tempBook.setAuthorLast(authorLastName);
+    tempBook.setCopyNum(copyNum);
+    tempBook.setReserveDate(reserveDate);
+    tempBook.setReturnDate(returnDate);
+    node->books.push_back(tempBook);
+  }
+  void returnBook(ListNode* node) // Removes a book from a Student node
+  {
+    // Variable Declarations
+    int bookNum = bookVectorDisplay(node);
+    if (bookNum > -1)
+    {
+      // Book Data Reset/Removal
+      node->books.erase(node->books.begin() + bookNum);
+    }
+  }
+  void displayBook(ListNode* node) // Displays the information of a book in a Student node
+  {
+    // Variable Declarations
+    int bookNum = bookVectorDisplay(node);
+    if (bookNum < -1)
+    {
+      // Formatted Book Object Data Display
+      cout << "Book Title: " << node->books[bookNum].getBookName() << endl;
+      cout << "Author Name: " << node->books[bookNum].getAuthorLast();
+      cout << ", " << node->books[bookNum].getAuthorFirst() << endl;
+      cout << "Number of Copies: " << node->books[bookNum].getCopyNum() << endl;
+      cout << "Reserve Date: " << node->books[bookNum].getReserveDate() << endl;
+      cout << "Return Date: " << node->books[bookNum].getReturnDate() << endl;
+    }
+  }
+  void displayStudentRecord(ListNode* node) // Displays the information and courses of a Student node
+  {
+    cout << " -|- Student Record -|-  " << endl;
+    cout << "Student Name: " << node->name << " - Student ID: " << node->ID << endl;
+    cout << "Student GPA: " << node->GPA << " - Current Semester: " << node->semester << endl;
+    cout << "\n - Current Semester Courses - " << endl;
+    for (int i = 0; i < node->courses.size(); i++) // Loops through courses in the current semester
+      {
+        // If statement validates if course exist (not default)
+        if (node->courses[i].getSemester() == node->semester)
+        { 
+          cout << "Course #" << i + 1 << ":" << endl;
+          cout << "   Course Name: " << node->courses[i].getCourseName() << endl;
+          cout << "   Course Instructor: " << node->courses[i].getInstructName()<< endl;
+          cout << "   Course Grade: " << node->courses[i].getGrade() << "%";
+          cout << " - Credits Earned: " << node->courses[i].getCredit() << endl;
+          cout << "   Course Details: " << node->courses[i].getCourseDetail() << endl;
+        }
+      }
+    cout << "\n - Previous Semester Courses - " << endl;
+    // Loops through all courses and shows the information of the courses from previous semesters.
+    for (int i = 0; i < node->courses.size(); i++)
+    {
+        // If statement validates if course exist (not default)
+        if (node->courses[i].getSemester() < node->semester)
+        {
+          cout << "Course #" << i + 1 << ":" << endl;
+          cout << "   Course Name: " << node->courses[i].getCourseName() << endl;
+          cout << "   Course Instructor: " << node->courses[i].getInstructName()<< endl;
+          cout << "   Course Grade: " << node->courses[i].getGrade() << "%";
+          cout << " - Credits Earned: " << node->courses[i].getCredit() << endl;
+          cout << "   Course Details: " << node->courses[i].getCourseDetail() << endl;
+        }
+    }
+    cout << " - End of Student Record - " << endl;
+  } // End of displayStudentRecord
+  void displayStudentInfo(ListNode* node) // Displays the information of a Student node
+  {
+    // Formatted Instructor Object Data Display
+    cout << "Student Name: ";
+    cout << node->name << endl;
+    cout << "Student ID: ";
+    cout << node->ID << endl;
+    cout << "Student's Current Semester: ";
+    cout << node->semester << endl;
+    cout << "Student GPA: ";
+    cout << node->GPA << endl;
+  }
+  void editStudentInfo(ListNode* node) // Edits the information of a Student node
+  {
+    // Variable Declarations
+    string tempName;
+    long tempID;
+    double tempGPA;
+    int tempSemester;
+    // Student Data User Input
+    cout << "Enter Student Name: ";
+    getline (cin >> ws,tempName);
+    cout << "Enter Student ID: ";
+    cin >> tempID;
+    cout << "Enter Current Semester: ";
+    cin >> tempSemester;
+    cout << "Enter Current GPA: ";
+    cin >> tempGPA;
+    // Student Data Editing
+    node->name = tempName;
+    node->ID = tempID;
+    node->semester = tempSemester;
+    node->GPA = tempGPA;
+  }
+  // Destructor
+  ~StudentList() 
+  {
+    ListNode *counterPTR;
+    ListNode *nextNode;
+    // Position counterPTR at the head of the list.
+    counterPTR = head;
+    // While counterPTR is not at the end of the list...
+    while (counterPTR != nullptr)
+      {
+        // Save pointer to next node
+        nextNode = counterPTR->next;
+        // Delete current node
+        delete counterPTR;
+        // Position counterPTR at next node
+        counterPTR = nextNode;
+      }
+    if(TEST_DESTRUCTORS) { cout << "Student List deleted" << endl; }
+  }
+};
+
+int main() {
+  StudentList students;
+  int studentNum;
+  students.displayList();
+  students.appendNode("Zach",101,3.85,4);
+  students.appendNode("Test",102,3.0,4);
+  students.displayList();
+  cout << "Enter the number for the student to use: ";
+  cin >> studentNum;
+  students.displayStudentInfo(students.selectNode(studentNum));
+  students.editStudentInfo(students.selectNode(studentNum));
+  students.displayStudentInfo(students.selectNode(studentNum));
+  
+  //students.addCourse(students.selectNode(studentNum);
+  //students.displayStudentRecord(students.selectNode(studentNum));
+  //students.removeCourse(students.selectNode(studentNum));
+  //students.displayStudentRecord(students.selectNode(studentNum));
+  
+  //students.borrowBook(students.selectNode(studentNum));
+  //students.displayBook(students.selectNode(studentNum));
+  //students.returnBook(students.selectNode(studentNum));
+  //students.displayBook(students.selectNode(studentNum));
+  
+  //students.deleteNode(2);
+  //students.displayList();
+  return 0;
+}
