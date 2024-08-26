@@ -1,0 +1,27 @@
+// Note that this is just one portion of code used when testing. The code was often written, copied to another file, then replaced here
+
+use std::sync::mpsc; // Multiple producer one consumer
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+  let (tx, rx) = mpsc::channel(); // Channel for thread communication
+  let tx1 = tx.clone(); // Creating a clone of the transmitter to allow multiple producers to send concurrently.
+  thread::spawn(move || { // Thread 1
+    let vals = vec![String::from("1"), String::from("2"), String::from("3"), String::from("4"),];
+      for val in vals {
+          tx1.send(val).unwrap();
+          thread::sleep(Duration::from_secs(1));
+      }
+  });
+  thread::spawn(move || { // Thread 2
+      let vals = vec![String::from("a"), String::from("b"), String::from("c"), String::from("d"),];
+      for val in vals {
+          tx.send(val).unwrap();
+          thread::sleep(Duration::from_secs(1));
+      }
+  });
+  for received in rx { // Main method acting as the reciever
+      println!("Got: {}", received);
+  }
+}
