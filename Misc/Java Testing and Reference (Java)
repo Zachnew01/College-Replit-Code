@@ -1,0 +1,71 @@
+class Main 
+{
+  public static void main(String[] args) 
+  {
+    // Java Comment 
+    /*
+      Java Multiline comment
+    */
+    
+    System.out.println("Hello world!"); // Basic console output command (println for new line)
+
+    double largeVal = 22 / 7.0;
+    System.out.printf("%.5f \n", largeVal); // Console output command w/ formatting
+      // Prints to a format string
+    
+    // Java Data Types:
+    int testInt = 42;
+    short testShort = 5;
+    byte testByte = 16;
+    long testLong = 99999;
+    double testDouble = 6.9;
+    float testFloat = 1 / 2;
+    boolean testBool = true;
+    char testChar = 'c';
+    
+    String testName = "Name"; // String data type is a class (Uppercase compared to C++)
+    var testVar = "testVarLiteral";
+    
+    System.out.printf("%d %c %s", testInt, testChar, testName);
+    System.out.println();
+
+    // Java Identifiers 
+
+    // Variable Identifiers
+    char _empID;          // Ok
+    int emp99;            // Ok
+    //double 3d_printer;  // Bad (can't start with a number)
+    //byte print#10;      // Bad (invalid character (#))
+    //int int;            // Bad (uses reserved keyword) (67 different reserved keywords?)
+    int Int;              // Ok (bad form)
+
+    // String functions
+    String testString = "String for Testing";
+
+    System.out.printf("There are %d chars in the string %s \n", testString.length(), testString); 
+      // String Length
+    
+    if (!testName.equals(testString)) {
+      System.out.println("The strings are different");
+    }
+    // Test for string equality
+
+    // Input Output statments:
+
+    // Output = System.out.print
+
+    // Inputs = either "Command Line Arguments" or "Scanner Class"
+    /* Command Line arguments:
+        - Manually set values into the args of the program.
+        - You can then use the values in the arg array within the code.
+        - To convert from String to Int, use "Integer.parseINt(arg[0])"
+        - These values can be used if running the program in the command line
+    */
+    
+    // Scanner Class
+    var scanner = new Scanner(System.in); // Create a scanner object
+    int testInput;
+    testInput = scanner.nextint(); // Uses the next string input into the console
+    System.out.println(testInput);
+  }
+}
