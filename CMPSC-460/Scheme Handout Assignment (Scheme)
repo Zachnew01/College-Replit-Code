@@ -1,0 +1,63 @@
+; Scheme Basics
+(< 1 2)
+(define x 5)
+x
+(+ 1 2 3 4)
+(+ (* 5 6) (/ 8 4))
+(* 9)
+'(1 2 3 4)
+
+; List Operations
+(cdr '(1 2))
+(car '(1 2 3))
+(cdr '(1 2 3))
+(car (cdr (cdr '(1 2 3 4))))
+(cdr '(5))
+(car (cdr (car '((1 2 3) 4 5 6))))
+(cddr '(1 2 3 4))
+(cadr '(1 2 3 4))
+(cdddr '(1 2 3 4))
+(cons 7 '(4 5 6))
+(null? '(8 9))
+(length '(2 3 4))
+(reverse '(3 4 5))
+(append '(1 2) '(3 4))
+(member 3 '(1 2 3 4 5 6))
+(list 7 8 9)
+(equal? '(1 2 3) '(1 2 3)) ; Checks if two lists are equal
+
+; Type Checking
+(list? '(7 8 9))
+(list? 6)
+(number? 5)
+(number? '(3 4))
+(string? "abc")
+(boolean? (< 3 4))
+
+; Boolean and Conditional Expressions
+(>= 6 6)
+(= 5 5)
+(and (< 1 2) (< 9 8))
+(or (< 1 2) (not (< 9 8)))
+(if (< 1 2) 3 4)
+(define x 5)
+(define y 7)
+(if (< x y) (+ x y) (*x y))
+(if (> x y) "a" '(a b))
+(cond ((< x 0) "negative")
+      ((> x 0) "positive")
+      ((= x 0) "zero")
+)
+
+; Write your own list operations
+(define (mylength lst)
+  (cond ((null? lst) 0)
+        (else (+ 1 (mylength (cdr lst)) ) )
+  )
+)
+
+(define (myreverse lst)
+  (if (null? lst) lst
+    (append (myreverse (cdr lst)) (list (car lst)))
+  )
+)
