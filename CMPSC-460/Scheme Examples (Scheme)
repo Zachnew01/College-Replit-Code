@@ -1,0 +1,49 @@
+(< 1 2)
+(define x 5)
+x
+(+ 1 2 3 4)
+(+ (* 5 6) (/ 8 4))
+(* 9)
+'(1 2 3 4) ;list
+(cdr '(1 2)) ; Return a list without the first element
+; cdr means the list without the first element
+; can have multiple d's to remove the first # elements, where # is the number of d's
+(car '(1 2 3)) ; return a first element of the list
+; car means the first element in the list
+(cadr '(1 2 3 4)) ; Equivalent to (car(cdr '(1 2 3 4)))
+(cdr '(5)) ; returns an empty list
+(cons 7 '(4 5 6)) ; prepends the element to the start of the list (Concatenate)
+(car (cdr (car '((1 2 3) 4 5 6)))) ; Can have nested lists like '((1 2)(3 4))
+#|
+ multi-line comment
+ |#
+(null? '(8 9)) ; Returns whether the list is empty or not
+(length '(2 3 4)) ; returns the number of elements in the list
+(reverse '(3 4 5)) ; Reverses the order of elements in the list
+(append '(1 2) '(3 4)) ; concatenates two lists together (appends the elements from the second list to the first list)
+(member 3 '(1 2 3 4 5 6)) ; returns a sublist starting at the specifed input (or #f if the input isn't in the list)
+(list 7 8 9) ; Another way of writing the list '(7 8 9)
+; Can check the type of a variable/data by putting the variable name + ?
+(equal? '(1 2 3) '(1 2 3)) ; Returns whether the two lists are equal or not
+
+
+; Week 2 - Scheme In-class example
+; Sum Squares
+(define (sqr x) (* x x))
+(define (sumSqr lst)
+  (if (null? lst) 0
+      (+ (sqr (car lst)) (sumSqr (cdr lst)))
+  )
+)
+(define (sumSqr2 lst)
+  (if (null? lst) 0
+      (+ (sqr (* (car lst) (car lst))) (sumSqr (cdr lst)))
+  )
+)
+
+; Square (list)
+(define (sqrLst lst) 
+  (if (null? lst) '()
+      (cons (* (car lst) (car lst)) (sqrLst (cdr lst)))
+  )
+)
