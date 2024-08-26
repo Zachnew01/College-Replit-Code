@@ -1,0 +1,38 @@
+// 2D_arrays
+
+#include <iostream>
+using namespace std;
+
+const int ROWS = 3;
+const int COLS = 2;
+
+int main()
+{
+	int number = 0;
+	int row = 0;
+	int col = 0;
+	int scores[ROWS][COLS];
+
+	for (row = 0; row < ROWS; row++) // inputing array values
+	{
+		for (col = 0; col < COLS; col++)
+		{
+			cout << "Enter next score: ";
+			cin >> scores[row][col];
+		}
+	}
+
+	// printing 2D array
+	for (row = 0; row < ROWS; row++)
+	{
+
+		for (col = 0; col < COLS; col++)
+		{
+			cout << scores[row][col] << '\t';
+		}
+
+		cout << endl; // advancing to next line
+	}
+
+	return 0;
+}// end of main
